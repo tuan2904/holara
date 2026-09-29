@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Định nghĩa các biến layout cơ bản cho Dark mode hỗ trợ */
+  --color-bg-app: var(--bg-app);
+  --color-bg-surface: var(--bg-surface);
+  --color-text-main: var(--text-main);
+  --color-text-dim: var(--text-dim);
+  --color-border-main: var(--border-main);
+}
+
+:root {
+  --bg-app: #f8fafc;        /* slate-50 */
+  --bg-surface: #ffffff;     /* white */
+  --text-main: #1e293b;     /* slate-800 */
+  --text-dim: #64748b;      /* slate-500 */
+  --border-main: #e2e8f0;    /* slate-200 */
+}
+
+/* Biến màu cho chế độ Tối */
+.dark {
+  --bg-app: #0f172a;        /* slate-950 */
+  --bg-surface: #1e293b;      /* slate-800 sau khi mix */
+  --text-main: #f1f5f9;     /* slate-100 */
+  --text-dim: #94a3b8;      /* slate-400 */
+  --border-main: #334155;    /* slate-700 */
+}
+
+/* Áp dụng mặc định */
+@layer base {
+  body {
+    @apply bg-bg-app text-text-main transition-colors duration-200;
+  }
+  
+  /* Đồng bộ cuộn chuột */
+  * {
+    @apply border-border-main;
+  }
+}
