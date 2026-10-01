@@ -1,0 +1,132 @@
+name: medecode
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in docker/.env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-holora_medical}
+      MYSQL_USER: ${MYSQL_USER:-holora_app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in docker/.env}
+    ports:
+      - "127.0.0.1:${MYSQL_PORT:-13308}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+      - ../holora_medical.sql:/docker-entrypoint-initdb.d/01-data.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    networks:
+      - holora_network
+
+  phpmyadmin:
+    image: phpmyadmin:5-apache
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PHPMYADMIN_PORT:-18080}:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - holora_network
+
+  image-processing:
+    build:
+      context: ../image-processing
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${IMAGE_PROCESSING_PORT:-18000}:8000"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=${MYSQL_USER:-holora_app}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_NAME=holora_image_processing_db
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY:?Set INTERNAL_API_KEY in docker/.env}
+      - DEBUG=False
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - image_uploads:/app/uploads
+      - image_results:/app/processed
+    networks:
+      - holora_network
+
+  laravel-backend:
+    build:
+      context: ../laravel-backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${LARAVEL_BACKEND_PORT:-15002}:8000"
+    environment:
+      APP_ENV: production
+      APP_NAME: MeDecode
+      APP_DEBUG: "false"
+      APP_KEY: ${LARAVEL_APP_KEY:?Set LARAVEL_APP_KEY in docker/.env}
+      APP_URL: http://localhost:${LARAVEL_BACKEND_PORT:-15002}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:18081}
+      DEMO_PAYMENTS_ENABLED: ${DEMO_PAYMENTS_ENABLED:-false}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${MYSQL_DATABASE:-holora_medical}
+      DB_USERNAME: ${MYSQL_USER:-holora_app}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:18081,http://localhost:15173}
+      LEGACY_UPLOADS_PATH: /var/www/html/storage/app/uploads
+      LEGACY_UPLOADS_URL_PREFIX: /public/uploads
+      IMAGE_PROCESSING_URL: ${IMAGE_PROCESSING_URL:-http://image-processing:8000}
+      IMAGE_PROCESSING_PUBLIC_URL: http://localhost:${IMAGE_PROCESSING_PORT:-18000}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:?Set INTERNAL_API_KEY in docker/.env}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in docker/.env}
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      QUEUE_CONNECTION: sync
+    depends_on:
+      mysql:
+        condition: service_healthy
+      image-processing:
+        condition: service_started
+    volumes:
+      - backend_uploads:/var/www/html/storage/app/uploads
+    networks:
+      - holora_network
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:15002}
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-18081}:5173"
+    depends_on:
+      laravel-backend:
+        condition: service_started
+    networks:
+      - holora_network
+
+networks:
+  holora_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  backend_uploads:
+  image_uploads:
+  image_results:

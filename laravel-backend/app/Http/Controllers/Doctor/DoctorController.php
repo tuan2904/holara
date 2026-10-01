@@ -1,0 +1,223 @@
+<?php
+
+namespace App\Http\Controllers\Doctor;
+
+use App\Http\Controllers\Controller;
+use App\Services\Auth\LegacyAuditService;
+use App\Services\LegacyMedicalCodeService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class DoctorController extends Controller
+{
+    public function __construct(private LegacyMedicalCodeService $codes, private LegacyAuditService $audit) {}
+
+    private function db($e)
+    {
+        return response()->json(['message' => 'Database error', 'error' => $e->getMessage()], 500);
+    }
+
+    private function enrich($ids = null)
+    {
+        $q = DB::table('doctor as d')->leftJoin('users as u', 'd.user_id', '=', 'u.id')->leftJoin('specialty as s', 'd.specialty_id', '=', 's.id')->select('d.*', 'u.username', 'u.email as user_email', 's.name as specialty_name');
+        if ($ids) {
+            $q->whereIn('d.id', (array) $ids);
+        }$docs = $q->orderByDesc('d.created_at')->get();
+        foreach ($docs as $d) {
+            $bs = DB::table('doctor_branch as db')->join('branch as b', 'b.id', '=', 'db.branch_id')->where('db.doctor_id', $d->id)->whereNull('db.deleted_at')->whereNull('b.deleted_at')->select('b.id', 'b.name', 'b.code')->orderBy('b.name')->get();
+            $d->branch_ids = $bs->pluck('id')->all();
+            $d->branches = $bs;
+            $d->branch_names = $bs->pluck('name')->implode(', ');
+        }
+
+        return $docs;
+    }
+
+    public function index()
+    {
+        try {
+            return response()->json(['message' => 'Doctors fetched successfully', 'data' => $this->enrich()]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $x = $this->enrich([$id]);
+
+            return $x->isNotEmpty() ? response()->json(['message' => 'Doctor fetched successfully', 'data' => $x[0]]) : response()->json(['message' => 'Doctor not found'], 404);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function nextCode()
+    {
+        try {
+            return response()->json(['message' => 'Next doctor code generated successfully', 'data' => ['code' => $this->codes->next('doctor')]]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function search(Request $r)
+    {
+        $page = max(1, (int) $r->query('page', 1));
+        $limit = min(50, max(1, (int) $r->query('limit', 20)));
+        try {
+            $q = DB::table('doctor as d')->leftJoin('specialty as s', 'd.specialty_id', '=', 's.id')->where('d.status', '<>', 'deleted');
+            if ($r->query('status')) {
+                $q->where('d.status', $r->query('status'));
+            }if ($r->query('q')) {
+                $v = '%'.trim($r->query('q')).'%';
+                $q->where(fn ($x) => $x->where('d.full_name', 'like', $v)->orWhere('d.doctor_code', 'like', $v)->orWhere('s.name', 'like', $v));
+            }if ($r->query('specialty_id')) {
+                $q->where('d.specialty_id', $r->query('specialty_id'));
+            }if ($r->query('branch_id')) {
+                $q->whereExists(fn ($x) => $x->selectRaw(1)->from('doctor_branch as db')->whereColumn('db.doctor_id', 'd.id')->where('db.branch_id', $r->query('branch_id'))->whereNull('db.deleted_at'));
+            }$total = $q->count();
+            if (! $total) {
+                return response()->json(['message' => 'No doctors found', 'data' => [], 'meta' => ['page' => $page, 'limit' => $limit, 'total' => 0, 'totalPages' => 0, 'hasMore' => false]]);
+            }$ids = $q->orderByDesc('d.created_at')->offset(($page - 1) * $limit)->limit($limit)->pluck('d.id')->all();
+            $data = $this->enrich($ids);
+            $pages = (int) ceil($total / $limit);
+
+            return response()->json(['message' => 'Doctors fetched successfully', 'data' => $data, 'meta' => ['page' => $page, 'limit' => $limit, 'total' => $total, 'totalPages' => $pages, 'hasMore' => $page < $pages]]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function store(Request $r)
+    {
+        $need = ['full_name', 'phone', 'license_number', 'specialty_id'];
+        foreach ($need as $k) {
+            if (! $r->input($k)) {
+                return response()->json(['message' => 'Full name, phone, license number, and specialty are required'], 400);
+            }
+        }try {
+            if (DB::table('doctor')->where('license_number', $r->input('license_number'))->exists()) {
+                return response()->json(['message' => 'License number already exists'], 400);
+            }$data = $this->data($r) + ['doctor_code' => $this->codes->next('doctor'), 'created_by_user_id' => $r->attributes->get('legacy_auth_user')->id, 'user_id' => $r->input('user_id')];
+            $id = DB::table('doctor')->insertGetId($data);
+            $this->sync($id, $r->input('branch_ids'));
+            $doc = $this->enrich([$id])[0];
+            $this->audit->log($r, 'DOCTOR_CREATE', 'doctor', $id);
+
+            return response()->json(['message' => 'Doctor created successfully', 'data' => $doc], 201);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Failed to create doctor', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function update(Request $r, $id)
+    {
+        foreach (['full_name', 'phone', 'license_number'] as $k) {
+            if (! $r->input($k)) {
+                return response()->json(['message' => 'Full name, phone, and license number are required'], 400);
+            }
+        }try {
+            if (DB::table('doctor')->where('license_number', $r->input('license_number'))->where('id', '<>', $id)->exists()) {
+                return response()->json(['message' => 'License number already exists'], 400);
+            }$n = DB::table('doctor')->where('id', $id)->update($this->data($r) + ['updated_at' => now()]);
+            if (! $n) {
+                return response()->json(['message' => 'Doctor not found'], 404);
+            }$this->sync($id, $r->input('branch_ids'));
+            $this->audit->log($r, 'DOCTOR_UPDATE', 'doctor', $id);
+
+            return response()->json(['message' => 'Doctor updated successfully', 'data' => $this->enrich([$id])[0]]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function destroy(Request $r, $id)
+    {
+        try {
+            if (! DB::table('doctor')->where('id', $id)->exists()) {
+                return response()->json(['message' => 'Doctor not found'], 404);
+            }DB::table('doctor')->where('id', $id)->update(['status' => 'deleted', 'updated_at' => now()]);
+            DB::table('doctor_branch')->where('doctor_id', $id)->delete();
+            $this->audit->log($r, 'DOCTOR_DELETE', 'doctor', $id);
+
+            return response()->json(['message' => 'Doctor deleted successfully', 'data' => ['id' => (int) $id]]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function myBranches(Request $r)
+    {
+        try {
+            $uid = $r->attributes->get('legacy_auth_user')->id;
+            $bids = DB::table('branch')->where('owner_user_id', $uid)->whereNull('deleted_at')->pluck('id')->all();
+            if (! $bids) {
+                return response()->json(['message' => 'No doctors found', 'data' => []]);
+            }$rows = DB::table('doctor as d')->leftJoin('specialty as s', 's.id', '=', 'd.specialty_id')->join('doctor_branch as db', 'db.doctor_id', '=', 'd.id')->whereIn('db.branch_id', $bids)->whereNull('db.deleted_at')->where('d.status', '<>', 'deleted')->distinct()->select('d.id', 'd.user_id', 'd.full_name', 'd.phone', 'd.email', 'd.license_number', 'd.qualification', 'd.experience_years', 'd.consultation_fee', 'd.bio', 'd.avatar_url', 'd.status', 's.name as specialty_name', 'd.specialty_id')->orderBy('d.full_name')->get()->all();
+            if (! $rows) {
+                return response()->json(['message' => 'No doctors found', 'data' => []]);
+            }$map = [];
+            $br = DB::table('doctor_branch as db')->join('branch as b', 'b.id', '=', 'db.branch_id')->whereIn('db.doctor_id', array_map(fn ($d) => $d->id, $rows))->whereNull('db.deleted_at')->whereNull('b.deleted_at')->select('db.doctor_id', 'b.id as branch_id', 'b.name as branch_name', 'b.code as branch_code')->orderBy('b.name')->get();
+            foreach ($br as $x) {
+                $map[$x->doctor_id][] = (object) ['id' => (int) $x->branch_id, 'name' => $x->branch_name, 'code' => $x->branch_code];
+            }foreach ($rows as $d) {
+                $bs = $map[$d->id] ?? [];
+                $d->branch_ids = array_map(fn ($b) => $b->id, $bs);
+                $d->branch_names = implode(', ', array_map(fn ($b) => $b->name, $bs));
+                $d->branches = $bs;
+            }
+
+            return response()->json(['message' => 'Doctors fetched successfully', 'data' => $rows]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function me(Request $r)
+    {
+        $d = DB::table('doctor')->where('user_id', $r->attributes->get('legacy_auth_user')->id)->where('status', '<>', 'deleted')->first();
+
+        return $d ? response()->json(['message' => 'Doctor profile fetched successfully', 'data' => $d]) : response()->json(['message' => 'Doctor profile not found'], 404);
+    }
+
+    public function updateMe(Request $r)
+    {
+        $d = DB::table('doctor')->where('user_id', $r->attributes->get('legacy_auth_user')->id)->first();
+        if (! $d) {
+            return response()->json(['message' => 'Doctor profile not found'], 404);
+        }DB::table('doctor')->where('id', $d->id)->update(['phone' => $r->input('phone', $d->phone), 'bio' => $r->input('bio', $d->bio), 'avatar_url' => $r->input('avatar_url', $d->avatar_url), 'updated_at' => now()]);
+
+        return response()->json(['message' => 'Doctor profile updated successfully']);
+    }
+
+    public function patients(Request $r)
+    {
+        try {
+            $d = DB::table('doctor')->where('user_id', $r->attributes->get('legacy_auth_user')->id)->where('status', '<>', 'deleted')->value('id');
+            if (! $d) {
+                return response()->json(['message' => 'No patients found', 'data' => []]);
+            }$sql = "SELECT DISTINCT p.id,p.patient_code,p.full_name,p.phone,p.email,p.gender,p.date_of_birth,p.blood_group,p.status,p.created_at,(SELECT COUNT(*) FROM appointment a WHERE a.patient_id=p.id AND a.doctor_id=? AND a.status IN ('completed','confirmed','in_progress')) as appointment_count,(SELECT COUNT(*) FROM consultation c WHERE c.patient_id=p.id AND c.doctor_id=? AND c.status IN ('completed','in_progress','pending')) as consultation_count,(SELECT MAX(a.appointment_date) FROM appointment a WHERE a.patient_id=p.id AND a.doctor_id=?) as last_appointment_date FROM patient p WHERE (p.id IN (SELECT DISTINCT patient_id FROM appointment WHERE doctor_id=? AND status IN ('completed','confirmed','in_progress','scheduled')) OR p.id IN (SELECT DISTINCT patient_id FROM consultation WHERE doctor_id=? AND status IN ('pending','in_progress','completed'))) ORDER BY p.full_name ASC";
+
+            return response()->json(['message' => 'Patients fetched successfully', 'data' => DB::select($sql, [$d, $d, $d, $d, $d])]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    private function sync($id, $ids)
+    {
+        if (! is_array($ids)) {
+            return;
+        }DB::table('doctor_branch')->where('doctor_id', $id)->delete();
+        foreach ($ids as $b) {
+            DB::table('doctor_branch')->insert(['doctor_id' => $id, 'branch_id' => $b]);
+        }
+    }
+
+    private function data($r)
+    {
+        return ['specialty_id' => $r->input('specialty_id') ?: null, 'full_name' => $r->input('full_name'), 'phone' => $r->input('phone'), 'email' => $r->input('email'), 'license_number' => $r->input('license_number'), 'qualification' => $r->input('qualification'), 'experience_years' => $r->input('experience_years', 0), 'consultation_fee' => $r->input('consultation_fee', 0), 'bio' => $r->input('bio'), 'avatar_url' => $r->input('avatar_url'), 'status' => $r->input('status', 'active')];
+    }
+}

@@ -1,0 +1,36 @@
+name: medecode_tests
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: isolated-test-only
+      MYSQL_DATABASE: medecode_test
+    tmpfs:
+      - /var/lib/mysql
+    volumes:
+      - ../holora_medical.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+  tests:
+    build:
+      context: ../laravel-backend
+      dockerfile: Dockerfile.tools
+    environment:
+      APP_ENV: testing
+      DB_HOST: db
+      DB_DATABASE: medecode_test
+      DB_USERNAME: root
+      DB_PASSWORD: isolated-test-only
+      COMPOSER_PROCESS_TIMEOUT: 0
+    volumes:
+      - ../laravel-backend:/workspace
+      - test_vendor:/workspace/vendor
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "-c", "composer install --no-interaction --prefer-dist --no-progress && php vendor/bin/phpunit"]
+volumes:
+  test_vendor:

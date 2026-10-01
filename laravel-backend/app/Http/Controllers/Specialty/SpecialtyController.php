@@ -1,0 +1,182 @@
+<?php
+
+namespace App\Http\Controllers\Specialty;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class SpecialtyController extends Controller
+{
+    private function db($e)
+    {
+        return response()->json(['message' => 'Database error', 'error' => $e->getMessage()], 500);
+    }
+
+    private function parent($parent, $current = null)
+    {
+        if ($parent === null || $parent === '') {
+            return null;
+        }if (! filter_var($parent, FILTER_VALIDATE_INT) || $parent <= 0) {
+            throw new \RuntimeException('parent_id must be a positive integer or null', 400);
+        }if ((int) $parent === (int) $current) {
+            throw new \RuntimeException('A specialty cannot be its own parent', 400);
+        }$seen = [];
+        $node = (int) $parent;
+        while ($node) {
+            if (isset($seen[$node]) || $node === (int) $current) {
+                throw new \RuntimeException('Cannot create cyclic parent-child relationship', 400);
+            }$seen[$node] = 1;
+            $r = DB::table('specialty')->where('id', $node)->whereNull('deleted_at')->first();
+            if (! $r) {
+                throw new \RuntimeException('Parent specialty not found or inactive', 400);
+            }$node = $r->parent_id;
+        }
+
+        return (int) $parent;
+    }
+
+    private function rows()
+    {
+        return DB::select('SELECT s.*,p.name AS parent_name,(SELECT COUNT(*) FROM specialty c WHERE c.parent_id=s.id AND c.deleted_at IS NULL) AS child_count FROM specialty s LEFT JOIN specialty p ON p.id=s.parent_id WHERE s.deleted_at IS NULL ORDER BY CASE WHEN s.parent_id IS NULL THEN 0 ELSE 1 END,COALESCE(p.name,s.name),s.name');
+    }
+
+    private function tree($rows)
+    {
+        $m = [];
+        $roots = [];
+        foreach ($rows as $r) {
+            $n = clone $r;
+            $n->children = [];
+            $m[$r->id] = $n;
+        }foreach ($rows as $r) {
+            if ($r->parent_id && isset($m[$r->parent_id])) {
+                $m[$r->parent_id]->children[] = $m[$r->id];
+            } else {
+                $roots[] = $m[$r->id];
+            }
+        }
+
+        return $roots;
+    }
+
+    public function index()
+    {
+        try {
+            $rows = $this->rows();
+
+            return response()->json(['message' => 'Specialties fetched successfully', 'data' => $rows, 'tree' => $this->tree($rows)]);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $r = DB::selectOne('SELECT s.*,p.name AS parent_name FROM specialty s LEFT JOIN specialty p ON p.id=s.parent_id WHERE s.id=? AND s.deleted_at IS NULL', [$id]);
+
+            return $r ? response()->json(['message' => 'Specialty fetched successfully', 'data' => $r]) : response()->json(['message' => 'Specialty not found'], 404);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function store(Request $r)
+    {
+        $name = $r->input('name');
+        $code = $r->input('code');
+        if (! $name || ! $code) {
+            return response()->json(['message' => 'Specialty name and code are required'], 400);
+        }if (! preg_match('/^[A-Z0-9_]+$/', $code)) {
+            return response()->json(['message' => 'Code must contain only uppercase letters, numbers, and underscores'], 400);
+        }try {
+            $parent = $this->parent($r->input('parent_id'));
+            if (DB::table('specialty')->where('code', $code)->whereNull('deleted_at')->exists()) {
+                return response()->json(['message' => 'Specialty code already exists'], 400);
+            }$data = ['name' => $name, 'code' => $code, 'parent_id' => $parent, 'description' => $r->input('description') ?: null, 'status' => $r->input('status', 'active'), 'doctor_count' => 0];
+            $id = DB::table('specialty')->insertGetId($data);
+
+            return response()->json(['message' => 'Specialty created successfully', 'data' => (object) (['id' => $id] + $data + ['parent_name' => null, 'deleted_at' => null])], 201);
+        } catch (\RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function update(Request $r, $id)
+    {
+        if (! $r->input('name')) {
+            return response()->json(['message' => 'Specialty name is required'], 400);
+        }try {
+            $parent = $this->parent($r->input('parent_id'), $id);
+            $n = DB::table('specialty')->where('id', $id)->whereNull('deleted_at')->update(['name' => $r->input('name'), 'parent_id' => $parent, 'description' => $r->input('description') ?: null, 'status' => $r->input('status', 'active'), 'updated_at' => now()]);
+            if (! $n) {
+                return response()->json(['message' => 'Specialty not found'], 404);
+            }
+
+            return response()->json(['message' => 'Specialty updated successfully', 'data' => DB::selectOne('SELECT s.*,p.name AS parent_name FROM specialty s LEFT JOIN specialty p ON p.id=s.parent_id WHERE s.id=?', [$id])]);
+        } catch (\RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function parentUpdate(Request $r, $id)
+    {
+        try {
+            $parent = $this->parent($r->input('parent_id'), $id);
+            $n = DB::table('specialty')->where('id', $id)->whereNull('deleted_at')->update(['parent_id' => $parent, 'updated_at' => now()]);
+            if (! $n) {
+                return response()->json(['message' => 'Specialty not found'], 404);
+            }
+
+            return response()->json(['message' => 'Specialty parent updated successfully', 'data' => DB::table('specialty')->where('id', $id)->first()]);
+        } catch (\RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $s = DB::table('specialty')->where('id', $id)->whereNull('deleted_at')->first();
+            if (! $s) {
+                return response()->json(['message' => 'Specialty not found'], 404);
+            }if (DB::table('specialty')->where('parent_id', $id)->whereNull('deleted_at')->exists()) {
+                return response()->json(['message' => 'Cannot delete parent specialty with child specialties'], 400);
+            }$count = DB::table('doctor')->where('specialty_id', $id)->where('status', '<>', 'deleted')->count();
+            if ($count) {
+                return response()->json(['message' => 'Cannot delete specialty with assigned doctors', 'code' => 'SPECIALTY_HAS_DOCTORS', 'data' => ['specialty_id' => (int) $id, 'doctor_count' => $count, 'suggested_leaf_specialties' => []]], 409);
+            }DB::table('specialty')->where('id', $id)->update(['deleted_at' => now(), 'updated_at' => now()]);
+
+            return response()->json(['message' => 'Specialty deleted successfully']);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+
+    public function reassignDelete(Request $r, $id)
+    {
+        $target = $r->input('target_specialty_id');
+        if (! $target) {
+            return response()->json(['message' => 'target_specialty_id is required'], 400);
+        }try {
+            $source = DB::table('specialty')->where('id', $id)->whereNull('deleted_at')->first();
+            $dest = DB::table('specialty')->where('id', $target)->whereNull('deleted_at')->first();
+            if (! $source || ! $dest) {
+                return response()->json(['message' => 'Specialty not found'], 404);
+            }DB::table('doctor')->where('specialty_id', $id)->update(['specialty_id' => $target, 'updated_at' => now()]);
+            DB::table('specialty')->where('parent_id', $id)->update(['parent_id' => $source->parent_id, 'updated_at' => now()]);
+            DB::table('specialty')->where('id', $id)->update(['deleted_at' => now(), 'updated_at' => now()]);
+
+            return response()->json(['message' => 'Specialty reassigned and deleted successfully']);
+        } catch (\Throwable $e) {
+            return $this->db($e);
+        }
+    }
+}

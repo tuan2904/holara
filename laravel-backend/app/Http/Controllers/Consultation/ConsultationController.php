@@ -1,0 +1,212 @@
+<?php
+
+namespace App\Http\Controllers\Consultation;
+
+use App\Http\Controllers\Controller;
+use App\Services\Auth\LegacyAuditService;
+use App\Services\ClinicalAccess;
+use App\Services\SafeUpload;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class ConsultationController extends Controller
+{
+    public function __construct(private LegacyAuditService $audit) {}
+
+    private function u($r)
+    {
+        return $r->attributes->get('legacy_auth_user')->id;
+    }
+
+    private function p($u)
+    {
+        return DB::table('patient')->where('user_id', $u)->value('id');
+    }
+
+    public function create(Request $r)
+    {
+        $r->validate(['chief_complaint' => 'required|string|max:1000', 'symptoms' => 'required|string|max:10000', 'doctor_id' => 'nullable|integer|exists:doctor,id', 'appointment_id' => 'nullable|integer']);
+        $user = $r->attributes->get('legacy_auth_user');
+        if ($r->input('appointment_id')) {
+            $appointment = app(ClinicalAccess::class)->appointment($user, $r->input('appointment_id'));
+            abort_unless($appointment->patient_id == $this->p($user->id), 403);
+            $r->merge(['doctor_id' => $appointment->doctor_id]);
+        }
+        if (! $r->input('chief_complaint') || ! $r->input('symptoms')) {
+            return response()->json(['message' => 'Vui lòng nhập lý do khám và triệu chứng.'], 400);
+        }$a = $r->input('attachments', []);
+        if (is_string($a)) {
+            $a = json_decode($a, true) ?: [];
+        }if (count($a) > 3) {
+            return response()->json(['message' => 'Chỉ được gửi tối đa 3 ảnh mỗi ca tư vấn.', 'code' => 'IMAGE_LIMIT_EXCEEDED'], 400);
+        }if (! ($p = $this->p($this->u($r)))) {
+            return response()->json(['message' => 'Không tìm thấy hồ sơ bệnh nhân cho người dùng này.'], 404);
+        }
+        abort_unless(is_array($a), 422);
+        foreach ($a as &$attachment) {
+            $attachment = app(SafeUpload::class)->reference($attachment, null, $user);
+        }
+        unset($attachment);
+        try {
+            $id = DB::table('consultation')->insertGetId(['patient_id' => $p, 'doctor_id' => $r->input('doctor_id'), 'appointment_id' => $r->input('appointment_id'), 'chief_complaint' => $r->input('chief_complaint'), 'symptoms' => $r->input('symptoms'), 'status' => 'pending', 'priority' => 'normal']);
+            foreach ($a as $url) {
+                try {
+                    DB::table('consultation_image')->insert(['consultation_id' => $id, 'uploaded_by' => $this->u($r), 'image_url' => $url, 'image_type' => 'symptom']);
+                } catch (\Throwable $e) {
+                    logger()->warning($e->getMessage());
+                }
+            }$this->audit->log($r, 'CONSULTATION_CREATE', 'consultation', $id);
+
+            return response()->json(['message' => 'Gửi yêu cầu tư vấn thành công.', 'consultation_id' => $id], 201);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Lỗi tạo tư vấn', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function detail($id)
+    {
+        $x = DB::table('consultation as c')->join('patient as p', 'c.patient_id', '=', 'p.id')->leftJoin('doctor as d', 'c.doctor_id', '=', 'd.id')->select('c.*', 'p.full_name as patient_name', 'p.gender', 'p.date_of_birth', 'p.medical_history', 'p.allergies', 'd.full_name as doctor_name')->where('c.id', $id)->first();
+        if (! $x) {
+            return response()->json(['message' => 'Không tìm thấy yêu cầu tư vấn.'], 404);
+        }$x->images = DB::table('consultation_image')->where('consultation_id', $id)->whereNull('response_id')->orderBy('created_at')->get();
+        $rs = DB::table('consultation_response as cr')->join('users as u', 'cr.responder_user_id', '=', 'u.id')->select('cr.*', 'u.full_name as responder_name')->where('cr.consultation_id', $id)->orderBy('cr.created_at')->get();
+        foreach ($rs as $z) {
+            $z->attachments = DB::table('consultation_image')->where('response_id', $z->id)->get();
+        }$x->responses = $rs;
+
+        return response()->json(['message' => 'Lấy chi tiết thành công', 'data' => $x]);
+    }
+
+    public function response(Request $r, $id)
+    {
+        $r->validate(['content' => 'nullable|string|max:10000', 'response_type' => 'nullable|in:message,diagnosis,recommendation,prescription_note,follow_up', 'complete' => 'nullable|boolean']);
+        $files = $r->file('attachments', []);
+        if (! is_array($files)) {
+            $files = $files ? [$files] : [];
+        }$a = $r->input('attachments', []);
+        if (! is_array($a)) {
+            $a = [];
+        }if (! $r->filled('content') && ! $files && ! $a) {
+            return response()->json(['message' => 'Vui lòng nhập nội dung hoặc đính kèm hình ảnh.'], 400);
+        }if (count($files) + count($a) > 5) {
+            return response()->json(['message' => 'Chỉ được gửi tối đa 5 hình ảnh trong một phản hồi.', 'code' => 'RESPONSE_IMAGE_LIMIT_EXCEEDED'], 400);
+        }
+        $upload = app(SafeUpload::class);
+        $imgs = [];
+        foreach ($a as $attachment) {
+            $imgs[] = $upload->reference(is_string($attachment) ? $attachment : ($attachment['image_url'] ?? ''), (int) $id, $r->attributes->get('legacy_auth_user'));
+        }
+        $newFiles = $files ? $upload->store($files, true) : [];
+        $imgs = array_merge($imgs, $newFiles);
+        DB::beginTransaction();
+        try {
+            DB::table('consultation')->where('id', $id)->lockForUpdate()->first();
+            app(ClinicalAccess::class)->consultation($r->attributes->get('legacy_auth_user'), $id);
+            $u = $this->u($r);
+            $d = DB::table('doctor')->where('user_id', $u)->value('id');
+            if ($d) {
+                $c = $r->boolean('complete');
+                DB::table('consultation')->where('id', $id)->update(['status' => $c ? 'completed' : 'in_progress', 'doctor_id' => DB::raw("COALESCE(doctor_id,$d)"), 'started_at' => $c ? DB::raw('started_at') : DB::raw('COALESCE(started_at, NOW())'), 'completed_at' => $c ? DB::raw('NOW()') : DB::raw('completed_at'), 'updated_at' => now()]);
+            } else {
+                DB::table('consultation')->where('id', $id)->update(['updated_at' => now()]);
+            }$rid = DB::table('consultation_response')->insertGetId(['consultation_id' => $id, 'responder_user_id' => $u, 'response_type' => $r->input('response_type', 'message'), 'content' => $r->input('content', ''), 'is_from_ai' => 0]);
+            foreach ($imgs as $img) {
+                if ($img) {
+                    DB::table('consultation_image')->insert(['consultation_id' => $id, 'response_id' => $rid, 'uploaded_by' => $u, 'image_url' => $img, 'image_type' => 'other', 'created_at' => now()]);
+                }
+            }DB::commit();
+
+            return response()->json(['message' => 'Đã thêm phản hồi', 'response_id' => $rid, 'attachments_count' => count($a) + count($files)], 201);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            foreach ($newFiles as $file) {
+                @unlink(config('legacy.uploads.path').'/'.basename($file));
+            }
+            throw $e;
+        }
+    }
+
+    public function doctor(Request $r)
+    {
+        $u = $this->u($r);
+        $role = $r->attributes->get('legacy_auth_user')->role;
+        $q = DB::table('consultation as c')->join('patient as p', 'c.patient_id', '=', 'p.id')->leftJoin('doctor as d', 'c.doctor_id', '=', 'd.id')->select('c.id', 'c.chief_complaint', 'c.symptoms', 'c.status', 'c.priority', 'c.created_at', 'p.full_name as patient_name', 'p.gender', 'p.date_of_birth');
+        if (! in_array($role, ['admin', 'super_admin'])) {
+            $d = DB::table('doctor')->where('user_id', $u)->value('id');
+            if (! $d) {
+                return response()->json(['message' => 'Tài khoản của bạn chưa được liên kết hồ sơ bác sĩ.'], 403);
+            }$q->where(fn ($x) => $x->where(fn ($z) => $z->where('c.status', 'pending')->whereNull('c.doctor_id'))->orWhere('c.doctor_id', $d));
+        }
+
+        return response()->json(['message' => 'Lấy danh sách thành công', 'data' => $q->orderByDesc('c.created_at')->get()]);
+    }
+
+    public function history(Request $r)
+    {
+        $p = $this->p($this->u($r));
+        if (! $p) {
+            return response()->json(['message' => 'Không tìm thấy hồ sơ bệnh nhân.'], 403);
+        }
+
+        return response()->json(['message' => 'Lấy lịch sử tư vấn thành công', 'data' => DB::table('consultation as c')->leftJoin('doctor as d', 'c.doctor_id', '=', 'd.id')->select('c.id', 'c.chief_complaint', 'c.status', 'c.priority', 'c.created_at', 'd.full_name as doctor_name')->where('c.patient_id', $p)->orderByDesc('c.created_at')->get()]);
+    }
+
+    public function reopen(Request $r, $id)
+    {
+        $doctor = DB::table('doctor')->where('user_id', $this->u($r))->exists();
+        if (! $doctor && ! in_array($r->attributes->get('legacy_auth_user')->role, ['admin', 'super_admin'])) {
+            return response()->json(['message' => 'Chỉ bác sĩ mới có quyền mở lại ca tư vấn.'], 403);
+        }$x = DB::table('consultation')->where('id', $id)->first();
+        if (! $x) {
+            return response()->json(['message' => 'Không tìm thấy ca tư vấn.'], 404);
+        }if ($x->status !== 'completed') {
+            return response()->json(['message' => 'Chỉ có thể mở lại ca đã hoàn thành.'], 400);
+        }DB::table('consultation')->where('id', $id)->update(['status' => 'in_progress', 'completed_at' => null]);
+
+        return response()->json(['message' => 'Đã mở lại ca tư vấn thành công.']);
+    }
+
+    public function deleteImage(Request $r, $id, $imageId)
+    {
+        $n = DB::table('consultation_image')->where('id', $imageId)->where('consultation_id', $id)->whereNull('response_id')->delete();
+
+        return $n ? response()->json(['message' => 'Đã xóa ảnh thành công.']) : response()->json(['message' => 'Không tìm thấy ảnh.'], 404);
+    }
+
+    public function owner(Request $r)
+    {
+        try {
+            $sql = "SELECT DISTINCT c.id,c.chief_complaint,c.symptoms,c.status,c.priority,c.created_at,c.started_at,c.completed_at,p.full_name AS patient_name,p.gender,p.date_of_birth,d.full_name AS doctor_name,d.doctor_code,(SELECT COUNT(*) FROM consultation_response cr WHERE cr.consultation_id=c.id) AS response_count,GROUP_CONCAT(DISTINCT b.name ORDER BY b.name SEPARATOR ', ') AS branch_names FROM consultation c JOIN patient p ON c.patient_id=p.id INNER JOIN doctor d ON c.doctor_id=d.id INNER JOIN doctor_branch db ON db.doctor_id=d.id AND db.deleted_at IS NULL INNER JOIN branch b ON b.id=db.branch_id AND b.owner_user_id=? AND b.deleted_at IS NULL WHERE 1=1";
+            $p = [$this->u($r)];
+            if ($r->filled('status')) {
+                $sql .= ' AND c.status = ?';
+                $p[] = $r->query('status');
+            }if ($r->filled('priority')) {
+                $sql .= ' AND c.priority = ?';
+                $p[] = $r->query('priority');
+            }if ($r->filled('start_date')) {
+                $sql .= ' AND DATE(c.created_at) >= ?';
+                $p[] = $r->query('start_date');
+            }if ($r->filled('end_date')) {
+                $sql .= ' AND DATE(c.created_at) <= ?';
+                $p[] = $r->query('end_date');
+            }if ($r->filled('branch_id')) {
+                $sql .= ' AND b.id = ?';
+                $p[] = $r->query('branch_id');
+            }if ($r->filled('doctor_id')) {
+                $sql .= ' AND c.doctor_id = ?';
+                $p[] = $r->query('doctor_id');
+            }if ($r->filled('search')) {
+                $sql .= ' AND (p.full_name LIKE ? OR c.chief_complaint LIKE ? OR d.full_name LIKE ?)';
+                $v = '%'.$r->query('search').'%';
+                $p[] = $v;
+                $p[] = $v;
+                $p[] = $v;
+            }$sql .= " GROUP BY c.id ORDER BY CASE c.status WHEN 'pending' THEN 0 WHEN 'in_progress' THEN 1 ELSE 2 END,c.created_at DESC";
+
+            return response()->json(['message' => 'OK', 'data' => DB::select($sql, $p)]);
+        } catch (\Throwable $e) {
+            return response()->json(['message' => 'Database error', 'error' => $e->getMessage()], 500);
+        }
+    }
+}
