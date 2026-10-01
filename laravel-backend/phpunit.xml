@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+  <testsuites><testsuite name="Regression"><directory>tests</directory></testsuite></testsuites>
+  <php>
+    <env name="APP_ENV" value="testing"/>
+    <env name="APP_KEY" value="base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
+    <env name="APP_DEBUG" value="false"/>
+    <env name="JWT_SECRET" value="test-only-key-not-for-any-real-environment-123456"/>
+    <env name="DB_CONNECTION" value="mysql"/>
+    <env name="DB_DATABASE" value="medecode_test"/>
+    <env name="CACHE_STORE" value="array"/>
+    <env name="SESSION_DRIVER" value="array"/>
+    <env name="MAIL_MAILER" value="array"/>
+  </php>
+</phpunit>
