@@ -220,7 +220,7 @@ const DoctorPatientsPage = () => {
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-blue-600 dark:bg-blue-900/30 dark:text-blue-300">
-                      {patient.patient_code || "â€”"}
+                      {patient.patient_code || "—"}
                     </span>
                     <GenderPill gender={patient.gender} t={t} />
                   </div>
@@ -252,7 +252,7 @@ const DoctorPatientsPage = () => {
                         {patient.email}
                       </span>
                     )}
-                    {!patient.phone && !patient.email && <span>â€”</span>}
+                    {!patient.phone && !patient.email && <span>—</span>}
                   </div>
                   <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                     <span className="text-[10px] font-medium uppercase tracking-wide text-text-dim/70">
@@ -261,7 +261,7 @@ const DoctorPatientsPage = () => {
                     <span className="font-medium text-text-main">
                       {patient.last_appointment_date
                         ? formatDate(patient.last_appointment_date, i18n.language)
-                        : "â€”"}
+                        : "—"}
                     </span>
                   </div>
                 </div>
@@ -325,7 +325,7 @@ const DoctorPatientsPage = () => {
                           {patient.email}
                         </p>
                       )}
-                      {!patient.phone && !patient.email && <span className="text-text-dim">â€”</span>}
+                      {!patient.phone && !patient.email && <span className="text-text-dim">—</span>}
                     </td>
                     <td className="px-3 py-4">
                       <div className="space-y-1">
@@ -344,7 +344,7 @@ const DoctorPatientsPage = () => {
                     <td className="px-3 py-4 text-text-main">
                       {patient.last_appointment_date
                         ? formatDate(patient.last_appointment_date, i18n.language)
-                        : "â€”"}
+                        : "—"}
                     </td>
                   </tr>
                 ))
