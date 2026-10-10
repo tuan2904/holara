@@ -286,7 +286,7 @@ const SchedulesAdminPage = () => {
                 <tr key={s.id} className="group hover:bg-bg-app dark:hover:bg-slate-900/40 transition">
                   {/* Doctor */}
                   <td className="px-4 py-3">
-                    <p className="text-sm font-semibold text-text-main">{s.doctor_name || `Doctor #${s.doctor_id}`}</p>
+                    <p className="text-sm font-semibold text-text-main">{s.doctor_name || `${t("admin.doctor")} #${s.doctor_id}`}</p>
                     {s.specialty_name && <p className="text-xs text-text-dim">{s.specialty_name}</p>}
                   </td>
                   {/* Branch */}
@@ -318,7 +318,7 @@ const SchedulesAdminPage = () => {
                   {/* Status */}
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLS[s.status] || STATUS_CLS.inactive}`}>
-                      {s.status}
+                      {t(`enums.status.${s.status}`, { defaultValue: s.status })}
                     </span>
                   </td>
                 </tr>
@@ -338,11 +338,11 @@ const SchedulesAdminPage = () => {
           <div key={s.id} className="rounded-2xl border border-border-main bg-bg-surface p-4 shadow-sm dark:bg-slate-800">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <p className="text-sm font-bold text-text-main">{s.doctor_name || `Doctor #${s.doctor_id}`}</p>
+                <p className="text-sm font-bold text-text-main">{s.doctor_name || `${t("admin.doctor")} #${s.doctor_id}`}</p>
                 {s.specialty_name && <p className="text-xs text-text-dim">{s.specialty_name}</p>}
               </div>
               <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLS[s.status] || STATUS_CLS.inactive}`}>
-                {s.status}
+                {t(`enums.status.${s.status}`, { defaultValue: s.status })}
               </span>
             </div>
 
@@ -353,7 +353,7 @@ const SchedulesAdminPage = () => {
                 </span>
               )}
               <span className="inline-flex rounded-full bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700 dark:bg-orange-900/20 dark:text-orange-300">
-                {s.slot_duration}m slots
+                {t("admin.slotMinutes", { count: s.slot_duration })}
               </span>
             </div>
 

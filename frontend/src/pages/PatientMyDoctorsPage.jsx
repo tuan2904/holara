@@ -48,7 +48,7 @@ const DoctorCard = ({ doctor, type, t }) => {
       <Avatar url={doctor.avatar_url} name={doctor.full_name} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold leading-tight text-text-main">Dr. {doctor.full_name}</p>
+        <p className="truncate text-sm font-semibold leading-tight text-text-main">{t("common.drPrefix")} {doctor.full_name}</p>
         {doctor.specialty_name && <p className="mt-0.5 truncate text-xs text-text-dim">{doctor.specialty_name}</p>}
 
         <div className="mt-2 flex flex-wrap items-center gap-3">

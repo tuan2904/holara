@@ -62,7 +62,7 @@ const AdminReviewsPage = () => {
       await moderateReviewApi(id, status);
       setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
     } catch (err) {
-      alert(err.response?.data?.message || "Error");
+      alert(err.response?.data?.message || t("common.error"));
     } finally {
       setModerating(null);
     }
@@ -100,7 +100,7 @@ const AdminReviewsPage = () => {
       <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-border-main bg-bg-surface p-4 shadow-sm dark:bg-slate-800">
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-text-dim" />
-          <span className="text-xs font-semibold text-text-dim">Status:</span>
+          <span className="text-xs font-semibold text-text-dim">{t("admin.reviewsPage.statusLabel")}</span>
           <div className="flex gap-1.5">
             {STATUS_OPTIONS.map((opt) => (
               <button
@@ -120,7 +120,7 @@ const AdminReviewsPage = () => {
 
         <div className="flex items-center gap-2">
           <Star className="h-4 w-4 text-text-dim" />
-          <span className="text-xs font-semibold text-text-dim">Rating:</span>
+          <span className="text-xs font-semibold text-text-dim">{t("admin.reviewsPage.ratingLabel")}</span>
           <div className="flex gap-1.5">
             <button
               onClick={() => { setRatingFilter(""); setPage(1); }}
@@ -176,11 +176,11 @@ const AdminReviewsPage = () => {
                   <td className="px-4 py-3 text-xs font-mono text-text-dim">#{review.id}</td>
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-text-main">
-                      {review.is_anonymous ? <span className="italic text-text-dim">Anonymous</span> : review.patient_name}
+                      {review.is_anonymous ? <span className="italic text-text-dim">{t("review.card.anonymous")}</span> : review.patient_name}
                     </p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm font-medium text-text-main">Dr. {review.doctor_name}</p>
+                    <p className="text-sm font-medium text-text-main">{t("common.drPrefix")} {review.doctor_name}</p>
                     <p className="text-xs text-text-dim">{review.doctor_code}</p>
                   </td>
                   <td className="px-4 py-3"><Stars rating={review.rating} /></td>
@@ -190,7 +190,7 @@ const AdminReviewsPage = () => {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[review.status] || ""}`}>
-                      {review.status}
+                      {t(`review.filter.${review.status}`, { defaultValue: review.status })}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-xs text-text-dim whitespace-nowrap">{formatDate(review.created_at)}</td>

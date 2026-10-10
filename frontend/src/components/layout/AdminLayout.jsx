@@ -48,7 +48,7 @@ const AdminLayout = ({ children }) => {
             <Link to="/admin" className="flex items-center gap-2">
               <Logo size="sm" />
               <div>
-                <div className="text-base font-bold text-[#E06666]">MeDecode Admin</div>
+                <div className="text-base font-bold text-[#E06666]">{t("admin.brandTitle")}</div>
                 <div className="text-xs text-text-dim">{t("admin.medicalDashboard")}</div>
               </div>
             </Link>

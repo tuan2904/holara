@@ -18,8 +18,8 @@ const ROLE_BADGE = {
   accountant:   "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40",
 };
 const ROLE_LABEL = {
-  super_admin:  "Super Admin",
-  admin:        "Admin",
+  super_admin:  "Quản trị viên cấp cao",
+  admin:        "Quản trị viên",
   doctor:       "Bác sĩ",
   patient:      "Bệnh nhân",
   receptionist: "Lễ tân",

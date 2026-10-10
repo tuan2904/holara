@@ -266,7 +266,7 @@ const DoctorAppointmentDetailPage = () => {
                       <div key={child.id} className="flex items-center gap-2 text-xs p-2 rounded border border-border-main bg-white dark:bg-slate-800">
                         <span className="font-mono text-sm text-blue-700">{child.appointment_code}</span>
                         <span>{fmtDate(child.appointment_date, lng)} {fmtTime(child.start_time)} - {fmtTime(child.end_time)}</span>
-                        <span className="text-text-dim">{child.status}</span>
+                        <span className="text-text-dim">{t(`enums.status.${child.status}`, { defaultValue: child.status })}</span>
                         <button
                           className="ml-auto text-xs text-red-500 underline"
                           disabled={child.status === "cancelled"}
@@ -329,7 +329,7 @@ const DoctorAppointmentDetailPage = () => {
                       ? "bg-cyan-100/70 text-cyan-700 ring-1 ring-cyan-200/50 dark:bg-cyan-900/20 dark:text-cyan-300"
                       : "bg-slate-100/70 text-slate-600 ring-1 ring-slate-200/50 dark:bg-slate-800/40 dark:text-slate-400"
                   }`}>
-                    {a.appointment_type || "office"}
+                    {t(`enums.appointmentType.${a.appointment_type || "office"}`, { defaultValue: a.appointment_type || "office" })}
                   </p>
                 </div>
               </div>

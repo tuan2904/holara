@@ -207,7 +207,7 @@ const PatientProfilePage = () => {
       icon: User,
       name: "full_name",
       value: profileData.full_name,
-      placeholder: "Nguyen Van A",
+      placeholder: t("common.placeholderFullName"),
     },
     {
       label: t("admin.phone"),
@@ -249,7 +249,7 @@ const PatientProfilePage = () => {
       icon: MapPin,
       name: "address",
       value: profileData.address,
-      placeholder: "123 Main Street",
+      placeholder: t("common.placeholderAddress"),
     },
   ];
 
@@ -288,7 +288,7 @@ const PatientProfilePage = () => {
       icon: User,
       name: "emergency_contact_name",
       value: profileData.emergency_contact_name,
-      placeholder: "Emergency contact name",
+      placeholder: t("patient.emergencyContactName"),
     },
     {
       label: t("patient.emergencyContactPhone"),

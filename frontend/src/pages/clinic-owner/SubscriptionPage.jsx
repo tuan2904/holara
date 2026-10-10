@@ -93,7 +93,7 @@ const InvoiceModal = ({ order, onClose, t }) => {
             [t("subscription.planName", { defaultValue: "Plan" }), displayPlanName(order.plan_name || order.plan_code)],
             [t("subscription.duration", { defaultValue: "Duration" }), `${order.months} ${t("subscription.months", { defaultValue: "month(s)" })}`],
             [t("subscription.amount", { defaultValue: "Amount" }), formatVND(order.amount_cents)],
-            [t("subscription.paymentMethod", { defaultValue: "Method" }), METHOD_LABEL[order.payment_method] || order.payment_method],
+            [t("subscription.paymentMethod", { defaultValue: "Method" }), (order.payment_method === "bank_transfer" ? t("subscription.bankTransfer") : METHOD_LABEL[order.payment_method] || order.payment_method)],
             [t("subscription.status", { defaultValue: "Status" }), null, order.status],
             [t("subscription.createdAt", { defaultValue: "Created" }), formatDateTime(order.created_at)],
             [t("subscription.paidAt", { defaultValue: "Paid at" }), order.paid_at ? formatDateTime(order.paid_at) : "—"],
@@ -102,7 +102,7 @@ const InvoiceModal = ({ order, onClose, t }) => {
               <span className="text-sm text-text-dim">{label}</span>
               {status ? (
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${PAYMENT_STATUS_BADGE[status] || ""}`}>
-                  {status}
+                  {t(`enums.status.${status}`, { defaultValue: status })}
                 </span>
               ) : (
                 <span className="text-sm font-medium text-text-main">{value}</span>
@@ -332,7 +332,7 @@ const SubscriptionPage = () => {
                       </div>
                     </div>
                     <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${STATUS_BADGE[accountSub?.status] || STATUS_BADGE.active}`}>
-                      {accountSub?.status || "active"}
+                      {t(`enums.status.${accountSub?.status || "active"}`, { defaultValue: accountSub?.status || "active" })}
                     </span>
                   </div>
                 </div>
@@ -523,10 +523,10 @@ const SubscriptionPage = () => {
                         </td>
                         <td className="px-4 py-3.5 font-medium text-text-main">{displayPlanName(p.plan_name || p.plan_code)}</td>
                         <td className="px-4 py-3.5 font-semibold text-text-main">{formatVND(p.amount_cents)}</td>
-                        <td className="px-4 py-3.5 text-text-dim">{METHOD_LABEL[p.payment_method] || p.payment_method}</td>
+                        <td className="px-4 py-3.5 text-text-dim">{(p.payment_method === "bank_transfer" ? t("subscription.bankTransfer") : METHOD_LABEL[p.payment_method] || p.payment_method)}</td>
                         <td className="px-4 py-3.5">
                           <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${PAYMENT_STATUS_BADGE[p.status] || ""}`}>
-                            {p.status}
+                            {t(`enums.status.${p.status}`, { defaultValue: p.status })}
                           </span>
                         </td>
                         <td className="px-4 py-3.5 text-text-dim">{formatDate(p.paid_at || p.created_at)}</td>
@@ -559,12 +559,12 @@ const SubscriptionPage = () => {
                         <p className="mt-1 text-sm font-semibold text-text-main">{displayPlanName(p.plan_name || p.plan_code)}</p>
                       </div>
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${PAYMENT_STATUS_BADGE[p.status] || ""}`}>
-                        {p.status}
+                        {t(`enums.status.${p.status}`, { defaultValue: p.status })}
                       </span>
                     </div>
                     <div className="mt-3 flex items-center justify-between text-sm">
                       <span className="font-bold text-text-main">{formatVND(p.amount_cents)}</span>
-                      <span className="text-text-dim">{METHOD_LABEL[p.payment_method] || p.payment_method}</span>
+                      <span className="text-text-dim">{(p.payment_method === "bank_transfer" ? t("subscription.bankTransfer") : METHOD_LABEL[p.payment_method] || p.payment_method)}</span>
                     </div>
                     <div className="mt-2 text-xs text-text-dim">{formatDate(p.paid_at || p.created_at)}</div>
                   </div>
@@ -589,7 +589,7 @@ const SubscriptionPage = () => {
         isOpen={confirmDowngradeOpen}
         title={t("subscription.confirmDowngradeTitle", { defaultValue: "Downgrade to MeDecode Free?" })}
         description={t("subscription.confirmDowngradeDesc", { defaultValue: "The limit of 3 branches and 3 doctors per branch will apply immediately after switching." })}
-        badgeLabel="Subscription"
+        badgeLabel={t("subscription.title")}
         tone="danger"
         confirmLabel={t("subscription.confirmDowngrade", { defaultValue: "Confirm downgrade" })}
         cancelLabel={t("common.cancel", { defaultValue: "Cancel" })}

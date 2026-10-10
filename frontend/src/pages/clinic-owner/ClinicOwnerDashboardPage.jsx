@@ -48,11 +48,11 @@ const ClinicOwnerDashboardPage = () => {
       <div className="bg-gradient-to-r from-[#E06666] to-[#D85555] rounded-2xl sm:rounded-3xl shadow-md p-4 sm:p-8 text-white">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-lg sm:text-3xl font-bold mb-1 leading-snug">
-            {t("clinicOwner.welcomeTitle") || "Welcome back"}, {user?.full_name || "Provider"}! 🏥
+            {t("clinicOwner.welcomeTitle") || "Welcome back"}, {user?.full_name || t("clinicOwner.providerFallback")}! 🏥
           </h1>
           <Link to="/" className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-xs font-medium text-white/80 hover:text-white hover:bg-white/25 transition shrink-0">
             <Home className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Homepage</span>
+            <span className="hidden sm:inline">{t("common.homepage")}</span>
           </Link>
         </div>
         <p className="text-white/85 text-xs sm:text-base mt-1">
@@ -100,13 +100,13 @@ const ClinicOwnerDashboardPage = () => {
           className="bg-bg-surface dark:bg-slate-800 rounded-xl sm:rounded-3xl shadow-sm border border-border-main p-2.5 sm:p-6 flex flex-col items-center sm:items-start text-center sm:text-left transition hover:border-[#E06666]/40 hover:shadow-md">
           <span className="text-lg sm:text-3xl mb-1">💳</span>
           <p className="text-xs sm:text-lg font-bold text-[#E06666] capitalize leading-tight mt-0.5">
-            {subscriptionSummary?.status || "none"}
+            {subscriptionSummary?.status ? t(`subscription.statusValue.${subscriptionSummary.status}`, { defaultValue: subscriptionSummary.status }) : t("subscription.statusValue.none")}
           </p>
           <p className="text-[9px] sm:text-xs font-semibold uppercase tracking-wide text-text-dim mt-1 leading-tight">
             {t("clinicOwner.subscription") || "Plan"}
           </p>
           <p className="mt-1 hidden sm:block text-sm text-text-dim truncate max-w-full">
-            {subscriptionSummary?.plan_name || "No active plan yet"}
+            {subscriptionSummary?.plan_name || t("subscription.noActivePlan")}
           </p>
           <span className="mt-2 hidden sm:inline-block text-sm text-[#E06666] hover:underline">
             {t("clinicOwner.manageSubscription") || "Manage →"}

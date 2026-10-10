@@ -117,7 +117,7 @@ const DoctorDashboardPage = () => {
                 </p>
                 <Link to="/" className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/20 transition">
                   <Home className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Homepage</span>
+                  <span className="hidden sm:inline">{t("common.homepage")}</span>
                 </Link>
               </div>
               <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
@@ -246,7 +246,7 @@ const DoctorDashboardPage = () => {
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400">{a.appointment_code}</span>
                       <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${STATUS_CLS[a.status] || ""}`}>
-                        {a.status}
+                        {t(`enums.status.${a.status}`, { defaultValue: a.status })}
                       </span>
                     </div>
                     <p className="mt-0.5 text-sm font-medium text-text-main truncate">{a.patient_name || "—"}</p>
@@ -294,7 +294,7 @@ const DoctorDashboardPage = () => {
                   </div>
                   <div className="text-right">
                     <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${STATUS_CLS[s.status] || ""}`}>
-                      {s.status}
+                      {t(`enums.status.${s.status}`, { defaultValue: s.status })}
                     </span>
                     <p className="mt-0.5 text-xs text-text-dim">{s.slot_duration}{t("common.minShort", { defaultValue: "min" })}</p>
                   </div>

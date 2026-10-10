@@ -1,13 +1,15 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
-  previousLabel = "Previous",
-  nextLabel = "Next",
+  previousLabel,
+  nextLabel,
 }) => {
+  const { t } = useTranslation();
   if (totalPages <= 1) return null;
 
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -20,7 +22,7 @@ const Pagination = ({
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-[#E06666]/35 hover:text-[#B64949] disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-[#141B29] dark:text-slate-200"
       >
-        <ChevronLeft size={16} /> {previousLabel}
+        <ChevronLeft size={16} /> {previousLabel || t("common.previous")}
       </button>
 
       <div className="flex flex-wrap items-center justify-center gap-2">
@@ -49,7 +51,7 @@ const Pagination = ({
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-[#E06666]/35 hover:text-[#B64949] disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-[#141B29] dark:text-slate-200"
       >
-        {nextLabel} <ChevronRight size={16} />
+        {nextLabel || t("common.nextPage")} <ChevronRight size={16} />
       </button>
     </div>
   );

@@ -102,11 +102,11 @@ const SpecialtiesPage = () => {
   };
 
   const handleReassignAndDelete = async () => {
-    if (!showDeleteConfirm || !reassignTargetId) { setError("Please select a target specialty to transfer doctors"); return; }
+    if (!showDeleteConfirm || !reassignTargetId) { setError(t("specialty.selectTransferTarget")); return; }
     try {
       setError(""); setSuccess("");
       await specialtyService.reassignAndDeleteSpecialty(showDeleteConfirm, reassignTargetId);
-      setSuccess("Doctors were transferred and specialty deleted successfully");
+      setSuccess(t("specialty.transferDeleteSuccess"));
       setShowDeleteConfirm(null); setDeleteSuggestion(null); setReassignTargetId("");
       fetchSpecialties();
     } catch (err) { setError(err.response?.data?.message || t("specialty.deleteError")); }
@@ -147,7 +147,7 @@ const SpecialtiesPage = () => {
     try {
       setIsDropping(true); setError(""); setSuccess("");
       await specialtyService.updateSpecialtyParent(specialtyId, newParentId);
-      setSuccess("Hierarchy updated successfully");
+      setSuccess(t("specialty.hierarchyUpdated"));
       await fetchSpecialties();
     } catch (err) { setError(err.response?.data?.message || t("specialty.updateError")); }
     finally { setIsDropping(false); setDraggingId(null); setDropTargetId(null); }
@@ -156,7 +156,7 @@ const SpecialtiesPage = () => {
   const handleDropOnSpecialty = async (targetId) => {
     if (!draggingId || draggingId === targetId) { setDraggingId(null); setDropTargetId(null); return; }
     const draggingNode = findNodeById(specialtyTree, draggingId);
-    if (collectDescendantIds(draggingNode).has(targetId)) { setError("Cannot move a parent under its own child"); setDraggingId(null); setDropTargetId(null); return; }
+    if (collectDescendantIds(draggingNode).has(targetId)) { setError(t("specialty.cannotMoveUnderChild")); setDraggingId(null); setDropTargetId(null); return; }
     await moveSpecialty(draggingId, targetId);
   };
   const handleDropToRoot = async () => { if (draggingId) await moveSpecialty(draggingId, null); };
@@ -247,7 +247,7 @@ const SpecialtiesPage = () => {
           <table className="min-w-full">
             <thead>
               <tr className="border-b border-border-main bg-bg-app dark:bg-slate-900/60">
-                {[t("specialty.name"), "Parent", t("specialty.code"), t("specialty.description"), t("specialty.doctorCount"), t("specialty.status"), ""].map((h, i) => (
+                {[t("specialty.name"), t("specialty.parent"), t("specialty.code"), t("specialty.description"), t("specialty.doctorCount"), t("specialty.status"), ""].map((h, i) => (
                   <th key={i} className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text-dim ${i === 6 ? "w-24" : ""}`}>{h}</th>
                 ))}
               </tr>
@@ -388,9 +388,9 @@ const SpecialtiesPage = () => {
 
             {deleteSuggestion && (
               <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-700/40 dark:bg-amber-900/20 dark:text-amber-400">
-                <p className="font-semibold">This specialty has {deleteSuggestion.doctorCount} doctor(s).</p>
-                <p className="mt-1">Please move doctors to another leaf specialty before deleting.</p>
-                <label className="mt-3 block text-xs font-semibold uppercase tracking-wide">Suggested target leaf specialty</label>
+                <p className="font-semibold">{t("specialty.hasDoctors", { count: deleteSuggestion.doctorCount })}</p>
+                <p className="mt-1">{t("specialty.moveDoctorsFirst")}</p>
+                <label className="mt-3 block text-xs font-semibold uppercase tracking-wide">{t("specialty.suggestedTarget")}</label>
                 <select value={reassignTargetId} onChange={(e) => setReassignTargetId(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-border-main bg-bg-app px-3 py-2 text-sm text-text-main dark:bg-slate-800">
                   {deleteSuggestion.suggestions.map((item) => (
@@ -412,7 +412,7 @@ const SpecialtiesPage = () => {
                   handleDeleteSpecialty(showDeleteConfirm, deleteTarget.doctor_count);
                 }}
                 className="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-bold text-white transition hover:bg-red-700">
-                {deleteSuggestion ? "Transfer & Delete" : t("common.delete")}
+                {deleteSuggestion ? t("specialty.transferAndDelete") : t("common.delete")}
               </button>
             </div>
           </div>

@@ -32,6 +32,11 @@ const STATUS_VI = {
   pending:     "Chờ xử lý",
 };
 
+const ROLE_VI = {
+  admin:       "Quản trị viên",
+  super_admin: "Quản trị viên cấp cao",
+};
+
 // ─── Helper: last 6 calendar months ──────────────────────────────────────────
 function getLast6Months() {
   const result = [];
@@ -303,16 +308,16 @@ const DashboardPage = () => {
         <div className="flex items-center justify-between gap-3">
           <div>
             <div className="text-base sm:text-xl font-bold text-[#E06666]">
-              Xin chào, {user?.full_name || "Admin"} 👋
+              Xin chào, {user?.full_name || "Quản trị viên"} 👋
             </div>
             <div className="mt-1 text-xs sm:text-sm text-text-dim">
               Bảng điều khiển tổng quan —{" "}
-              <span className="font-semibold uppercase">{role}</span>
+              <span className="font-semibold uppercase">{ROLE_VI[role] || role}</span>
             </div>
           </div>
           <Link to="/" className="flex items-center gap-1.5 rounded-lg border border-border-main bg-bg-app px-3 py-2 text-xs font-medium text-text-dim hover:text-[#E06666] hover:border-[#E06666]/40 transition shrink-0">
             <Home className="w-4 h-4" />
-            <span className="hidden sm:inline">Homepage</span>
+            <span className="hidden sm:inline">Trang chủ</span>
           </Link>
         </div>
       </div>

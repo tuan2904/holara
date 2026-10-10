@@ -168,7 +168,7 @@ const MyBranchesPage = () => {
                       : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400"
                   }`}
                 >
-                  {branch.status}
+                  {t(`enums.status.${branch.status}`, { defaultValue: branch.status })}
                 </span>
               </div>
 

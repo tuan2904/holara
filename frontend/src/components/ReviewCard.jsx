@@ -60,7 +60,7 @@ const ReviewCard = ({ review, showDoctor = false, locale = "vi" }) => {
 
       {showDoctor && review.doctor_name && (
         <p className="mt-2 text-xs text-text-dim">
-          → Dr. {review.doctor_name} {review.doctor_code && <span className="opacity-60">({review.doctor_code})</span>}
+          → {t("common.drPrefix")} {review.doctor_name} {review.doctor_code && <span className="opacity-60">({review.doctor_code})</span>}
         </p>
       )}
 
@@ -77,7 +77,7 @@ const ReviewCard = ({ review, showDoctor = false, locale = "vi" }) => {
           : review.status === "rejected" ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
           : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"
         }`}>
-          {review.status}
+          {t(`enums.status.${review.status}`, { defaultValue: review.status })}
         </span>
       )}
     </div>

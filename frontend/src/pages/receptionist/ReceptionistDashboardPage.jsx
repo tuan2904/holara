@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import { Calendar, Users, Phone, CheckCircle, AlertCircle, Home } from "lucide-react";
 
 const ReceptionistDashboardPage = () => {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === "en" ? "en-US" : "vi-VN";
   const todayStats = {
     appointments: 12,
     checkIns: 8,
@@ -15,29 +18,29 @@ const ReceptionistDashboardPage = () => {
   const quickLinks = [
     {
       icon: <Calendar className="w-6 h-6" />,
-      title: "Manage Appointments",
-      description: `${todayStats.appointments} today`,
+      title: t("receptionistDashboard.manageAppointments"),
+      description: t("receptionistDashboard.todayCount", { count: todayStats.appointments }),
       link: "/receptionist/appointments",
       color: "bg-blue-50 text-blue-600",
     },
     {
       icon: <CheckCircle className="w-6 h-6" />,
-      title: "Patient Check-In",
-      description: `${todayStats.checkIns} checked in`,
+      title: t("receptionistDashboard.patientCheckIn"),
+      description: t("receptionistDashboard.checkedInCount", { count: todayStats.checkIns }),
       link: "/receptionist/check-in",
       color: "bg-green-50 text-green-600",
     },
     {
       icon: <Users className="w-6 h-6" />,
-      title: "Patient List",
-      description: "Today's patients",
+      title: t("receptionistDashboard.patientList"),
+      description: t("receptionistDashboard.todayPatients"),
       link: "/receptionist/patients",
       color: "bg-purple-50 text-purple-600",
     },
     {
       icon: <Phone className="w-6 h-6" />,
-      title: "Call Log",
-      description: `${todayStats.calls} calls`,
+      title: t("receptionistDashboard.callLog"),
+      description: t("receptionistDashboard.callsCount", { count: todayStats.calls }),
       link: "/receptionist/calls",
       color: "bg-orange-50 text-orange-600",
     },
@@ -48,15 +51,15 @@ const ReceptionistDashboardPage = () => {
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-[#E06666] to-[#D85555] rounded-lg shadow-md p-8 text-white">
         <div className="flex items-start justify-between gap-3">
-          <h1 className="text-3xl font-bold mb-2">Welcome, {user?.full_name}! 👋</h1>
+          <h1 className="text-3xl font-bold mb-2">{t("receptionistDashboard.welcome", { name: user?.full_name })} 👋</h1>
           <Link to="/" className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/15 px-3 py-1.5 text-xs font-medium text-white/80 hover:text-white hover:bg-white/25 transition shrink-0">
             <Home className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Homepage</span>
+            <span className="hidden sm:inline">{t("common.homepage")}</span>
           </Link>
         </div>
-        <p className="text-white/90 text-lg">Today's reception overview and quick access to key tasks.</p>
+        <p className="text-white/90 text-lg">{t("receptionistDashboard.subtitle")}</p>
         <div className="mt-4 flex gap-3 text-sm text-white/80">
-          <span>📅 {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+          <span>📅 {new Date().toLocaleDateString(locale, { weekday: 'long', month: 'short', day: 'numeric' })}</span>
         </div>
       </div>
 
@@ -65,7 +68,7 @@ const ReceptionistDashboardPage = () => {
         <div className="bg-bg-surface dark:bg-slate-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-dim text-sm font-medium">Today's Appointments</p>
+              <p className="text-text-dim text-sm font-medium">{t("receptionistDashboard.todayAppointments")}</p>
               <p className="text-3xl font-bold text-text-main mt-2">{todayStats.appointments}</p>
             </div>
             <Calendar className="w-12 h-12 text-blue-500 opacity-20" />
@@ -75,7 +78,7 @@ const ReceptionistDashboardPage = () => {
         <div className="bg-bg-surface dark:bg-slate-800 rounded-lg shadow-md p-6 border-l-4 border-green-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-dim text-sm font-medium">Checked In</p>
+              <p className="text-text-dim text-sm font-medium">{t("receptionistDashboard.checkedIn")}</p>
               <p className="text-3xl font-bold text-text-main mt-2">{todayStats.checkIns}</p>
             </div>
             <CheckCircle className="w-12 h-12 text-green-500 opacity-20" />
@@ -85,7 +88,7 @@ const ReceptionistDashboardPage = () => {
         <div className="bg-bg-surface dark:bg-slate-800 rounded-lg shadow-md p-6 border-l-4 border-orange-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-dim text-sm font-medium">Pending Appointments</p>
+              <p className="text-text-dim text-sm font-medium">{t("receptionistDashboard.pendingAppointments")}</p>
               <p className="text-3xl font-bold text-text-main mt-2">{todayStats.pending}</p>
             </div>
             <AlertCircle className="w-12 h-12 text-orange-500 opacity-20" />
@@ -95,7 +98,7 @@ const ReceptionistDashboardPage = () => {
         <div className="bg-bg-surface dark:bg-slate-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-dim text-sm font-medium">Total Calls</p>
+              <p className="text-text-dim text-sm font-medium">{t("receptionistDashboard.totalCalls")}</p>
               <p className="text-3xl font-bold text-text-main mt-2">{todayStats.calls}</p>
             </div>
             <Phone className="w-12 h-12 text-purple-500 opacity-20" />
@@ -105,7 +108,7 @@ const ReceptionistDashboardPage = () => {
 
       {/* Quick Links */}
       <div>
-        <h2 className="text-xl font-semibold text-text-main mb-4">Quick Access</h2>
+        <h2 className="text-xl font-semibold text-text-main mb-4">{t("receptionistDashboard.quickAccess")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {quickLinks.map((link, index) => (
             <Link
@@ -125,16 +128,16 @@ const ReceptionistDashboardPage = () => {
 
       {/* Appointments Preview */}
       <div className="bg-bg-surface dark:bg-slate-800 rounded-lg shadow-md p-6 border border-border-main">
-        <h3 className="text-lg font-semibold text-text-main mb-4">Upcoming Appointments</h3>
+        <h3 className="text-lg font-semibold text-text-main mb-4">{t("receptionistDashboard.upcomingAppointments")}</h3>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center justify-between rounded-lg bg-bg-app p-3 dark:bg-slate-700/50">
               <div>
-                <p className="font-medium text-text-main">Patient Name</p>
-                <p className="text-xs text-text-dim">Doctor Name • 10:30 AM - 11:00 AM</p>
+                <p className="font-medium text-text-main">{t("receptionistDashboard.samplePatient")}</p>
+                <p className="text-xs text-text-dim">{t("receptionistDashboard.sampleDoctor")} • 10:30 - 11:00</p>
               </div>
               <button className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-medium rounded">
-                Check In
+                {t("receptionistDashboard.checkIn")}
               </button>
             </div>
           ))}

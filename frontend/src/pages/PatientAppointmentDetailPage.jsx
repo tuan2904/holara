@@ -101,7 +101,7 @@ const PatientAppointmentDetailPage = () => {
             </div>
             {appointment && (
               <span className={`inline-flex items-center gap-1.5 rounded-2xl px-4 py-2 text-xs font-bold uppercase tracking-wide ${STATUS_CLS[appointment.status] || "bg-white/20 text-white"}`}>
-                {appointment.status}
+                {t(`enums.status.${appointment.status}`, { defaultValue: appointment.status })}
               </span>
             )}
           </div>
@@ -167,7 +167,7 @@ const PatientAppointmentDetailPage = () => {
                       <div key={child.id} className="flex items-center gap-2 text-xs p-2 rounded border border-border-main bg-white dark:bg-slate-800">
                         <span className="font-mono text-sm text-blue-700">{child.appointment_code}</span>
                         <span>{fmtDate(child.appointment_date)} {fmtTime(child.start_time)} - {fmtTime(child.end_time)}</span>
-                        <span className="text-text-dim">{child.status}</span>
+                        <span className="text-text-dim">{t(`enums.status.${child.status}`, { defaultValue: child.status })}</span>
                         <button
                           className="ml-auto text-xs text-red-500 underline"
                           disabled={child.status === "cancelled"}
@@ -236,7 +236,7 @@ const PatientAppointmentDetailPage = () => {
                 </div>
               )}
               <div>
-                <p className="font-bold text-text-main">Dr. {appointment.doctor_name || "—"}</p>
+                <p className="font-bold text-text-main">{t("common.drPrefix")} {appointment.doctor_name || "—"}</p>
                 {appointment.specialty_name && <p className="mt-0.5 text-sm text-text-dim">{appointment.specialty_name}</p>}
               </div>
             </div>

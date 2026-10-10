@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18n from "../../i18n/config";
 import {
   AlertCircle, CheckCircle2, Heart, Pencil, Plus, RefreshCw,
   Search, Trash2, UserRound, Users, X,
@@ -90,7 +91,7 @@ const PatientsPage = () => {
       const res = await getAllPatientsApi();
       setPatients(res.data || []);
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to load patients");
+      setError(err?.response?.data?.message || i18n.t("errors.loadPatients"));
     } finally {
       setLoading(false);
     }
@@ -139,7 +140,7 @@ const PatientsPage = () => {
       setSuccess(t("admin.patientDeletedSuccess", { defaultValue: "Patient deleted successfully" }));
       setShowDeleteConfirm(null);
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to delete patient");
+      setError(err?.response?.data?.message || t("errors.deletePatient"));
       setShowDeleteConfirm(null);
     }
   };

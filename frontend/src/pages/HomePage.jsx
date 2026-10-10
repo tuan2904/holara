@@ -39,7 +39,7 @@ const HomePage = () => {
       ? "Đi tới khu vực của bạn"
       : "Go to your zone"
     : isVi
-    ? "Đi tới đăng ký Patient"
+    ? "Đi tới đăng ký bệnh nhân"
     : "Go to patient registration";
 
   const providerEntryLabel = user
@@ -47,44 +47,44 @@ const HomePage = () => {
       ? "Đi tới khu vực của bạn"
       : "Go to your zone"
     : isVi
-    ? "Đi tới đăng ký Provider"
+    ? "Đi tới đăng ký đối tác y tế"
     : "Go to provider registration";
 
   const getRoleLabel = () => {
     switch (role) {
       case "patient":
-        return isVi ? "patient" : "patient";
+        return isVi ? "bệnh nhân" : "patient";
       case "doctor":
-        return isVi ? "doctor" : "doctor";
+        return isVi ? "bác sĩ" : "doctor";
       case "clinic_owner":
-        return isVi ? "clinic owner" : "clinic owner";
+        return isVi ? "chủ phòng khám" : "clinic owner";
       case "admin":
       case "super_admin":
-        return isVi ? "admin" : "admin";
+        return isVi ? "quản trị viên" : "admin";
       case "receptionist":
-        return isVi ? "receptionist" : "receptionist";
+        return isVi ? "lễ tân" : "receptionist";
       case "accountant":
-        return isVi ? "accountant" : "accountant";
+        return isVi ? "kế toán" : "accountant";
       default:
-        return isVi ? "user" : "user";
+        return isVi ? "người dùng" : "user";
     }
   };
 
   const getZoneLabel = () => {
     switch (role) {
       case "patient":
-        return isVi ? "Patient Zone" : "Patient Zone";
+        return isVi ? "Khu vực bệnh nhân" : "Patient Zone";
       case "doctor":
-        return isVi ? "Doctor Zone" : "Doctor Zone";
+        return isVi ? "Khu vực bác sĩ" : "Doctor Zone";
       case "clinic_owner":
-        return isVi ? "Provider Zone" : "Provider Zone";
+        return isVi ? "Khu vực đối tác y tế" : "Provider Zone";
       case "admin":
       case "super_admin":
-        return isVi ? "Admin Panel" : "Admin Panel";
+        return isVi ? "Trang quản trị" : "Admin Panel";
       case "receptionist":
-        return isVi ? "Receptionist Zone" : "Receptionist Zone";
+        return isVi ? "Khu vực lễ tân" : "Receptionist Zone";
       case "accountant":
-        return isVi ? "Accountant Zone" : "Accountant Zone";
+        return isVi ? "Khu vực kế toán" : "Accountant Zone";
       default:
         return isVi ? "khu vực của bạn" : "your zone";
     }
@@ -136,10 +136,10 @@ const HomePage = () => {
   const promptSelectionLabel = rolePrompt
     ? rolePrompt.entryType === "provider"
       ? isVi
-        ? "Bạn vừa chọn khu vực Provider"
+        ? "Bạn vừa chọn khu vực đối tác y tế"
         : "You selected the Provider area"
       : isVi
-      ? "Bạn vừa chọn khu vực Patient"
+      ? "Bạn vừa chọn khu vực bệnh nhân"
       : "You selected the Patient area"
     : "";
 

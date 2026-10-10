@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import i18n from "../../i18n/config";
 import { useNavigate } from "react-router-dom";
 import {
   AlertCircle, CheckCircle2, Eye, Lock, Pencil,
@@ -36,7 +37,7 @@ const RolesPage = () => {
       const res = await roleService.getAllRolesApi();
       setRoles(res.data || []);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch roles");
+      setError(err.response?.data?.message || i18n.t("errors.fetchRoles"));
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ const RolesPage = () => {
       setShowDeleteConfirm(null);
       fetchRoles();
     } catch (err) {
-      const msg = err.response?.data?.message || "Failed to delete role";
+      const msg = err.response?.data?.message || t("errors.deleteRole");
       setError(msg.includes("cannot") ? t("admin.cannotDeleteRoleWithUsers") : msg);
       setShowDeleteConfirm(null);
     }

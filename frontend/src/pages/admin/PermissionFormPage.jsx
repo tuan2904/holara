@@ -149,7 +149,7 @@ const PermissionFormPage = () => {
                 {t("admin.name")} <span className="text-red-500">*</span>
               </label>
               <input type="text" name="name" value={formData.name} onChange={handleInputChange}
-                placeholder="e.g., Create User, Edit Role"
+                placeholder={t("admin.permissionNamePlaceholder")}
                 className="w-full rounded-xl border border-border-main bg-bg-app px-4 py-2.5 text-sm text-text-main outline-none transition focus:ring-2 focus:ring-amber-500/40 dark:bg-slate-900" />
             </div>
             {/* Code */}
@@ -158,7 +158,7 @@ const PermissionFormPage = () => {
                 {t("admin.code")} <span className="text-red-500">*</span>
               </label>
               <input type="text" name="code" value={formData.code} onChange={handleInputChange}
-                placeholder="e.g., create_user, edit_role" disabled={isEdit}
+                placeholder={t("admin.permissionCodePlaceholder")} disabled={isEdit}
                 className="w-full rounded-xl border border-border-main bg-bg-app px-4 py-2.5 text-sm text-text-main outline-none transition focus:ring-2 focus:ring-amber-500/40 disabled:bg-bg-app disabled:cursor-not-allowed disabled:opacity-60 dark:bg-slate-900" />
               {isEdit && <p className="mt-1 text-xs text-text-dim">{t("admin.codeCannotChange")}</p>}
             </div>
@@ -168,7 +168,7 @@ const PermissionFormPage = () => {
                 {t("admin.moduleName")} <span className="text-red-500">*</span>
               </label>
               <input type="text" name="module_name" value={formData.module_name} onChange={handleInputChange}
-                placeholder="e.g., users, roles, permissions"
+                placeholder={t("admin.permissionModulePlaceholder")}
                 className="w-full rounded-xl border border-border-main bg-bg-app px-4 py-2.5 text-sm text-text-main outline-none transition focus:ring-2 focus:ring-amber-500/40 dark:bg-slate-900" />
             </div>
             {/* Status */}

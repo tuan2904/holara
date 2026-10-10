@@ -43,7 +43,7 @@ const VideoConsultationPage = () => {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-900 text-white">
         <div className="text-center">
-          <div className="mb-4 text-3xl font-bold text-red-500">Opps!</div>
+          <div className="mb-4 text-3xl font-bold text-red-500">Rất tiếc!</div>
           <div className="text-lg">{error}</div>
           <button
             onClick={() => navigate(-1)}
@@ -100,7 +100,7 @@ const VideoConsultationPage = () => {
         isOpen={leaveModalOpen}
         title="Bạn có chắc chắn muốn rời phòng khám?"
         description="Phiên tư vấn video sẽ bị gián đoạn nếu bạn rời khỏi màn hình này ngay bây giờ."
-        badgeLabel="Video Consultation"
+        badgeLabel="Tư vấn video"
         tone="danger"
         confirmLabel="Rời phòng khám"
         cancelLabel="Ở lại"

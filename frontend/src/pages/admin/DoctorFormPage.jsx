@@ -221,26 +221,26 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
       return false;
     }
     if (fetchBranchesUrl && !selectedBranchHasSubscription) {
-      setError("Selected branch does not have an active subscription yet. Create the branch again or activate a plan first.");
+      setError(t("doctorForm.errNoSubscription"));
       return false;
     }
     if (fetchBranchesUrl && !selectedBranchSubscriptionActive) {
-      setError("Selected branch subscription is inactive. Please activate or renew the branch plan first.");
+      setError(t("doctorForm.errSubscriptionInactive"));
       return false;
     }
     if (selectedBranchDoctorLimitReached) {
-      setError("Selected branch has reached its doctor limit for the current subscription.");
+      setError(t("doctorForm.errDoctorLimit"));
       return false;
     }
     if (!isEdit) {
       if (formData.account_mode === "invite") {
         if (!formData.email?.trim()) {
-          setError("Doctor email is required for invite mode");
+          setError(t("doctorForm.errEmailInvite"));
           return false;
         }
       } else {
         if (!formData.email?.trim()) {
-          setError("Doctor email is required when creating a login account");
+          setError(t("doctorForm.errEmailLogin"));
           return false;
         }
         if (!formData.username?.trim()) {
@@ -293,7 +293,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
 
         if (setupUrl) {
           setInviteSetupUrl(setupUrl);
-          setSuccessMessage("Doctor invited successfully. Share this setup link with the doctor.");
+          setSuccessMessage(t("doctorForm.invitedSuccess"));
         } else {
           setSuccessMessage(t("admin.doctorCreatedSuccess"));
           setTimeout(() => navigate(returnPath), 1500);
@@ -304,11 +304,11 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
 
       if (err?.response?.status === 402) {
         if (err?.response?.data?.message === "Active subscription required") {
-          errorMsg = "Selected branch does not have an active doctor subscription. Open Subscription to activate a plan or create a new branch trial.";
+          errorMsg = t("doctorForm.err402NoSubscription");
         }
 
         if ((err?.response?.data?.message || "").includes("Doctor limit reached")) {
-          errorMsg = "Selected branch has reached the doctor limit for its current plan. Upgrade the branch subscription or choose another branch.";
+          errorMsg = t("doctorForm.err402DoctorLimit");
         }
       }
 
@@ -371,20 +371,20 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
               </div>
               <p className="mt-1 text-sm text-slate-300">
                 {isClinicOwnerMode
-                  ? "Create a doctor profile with branch-aware subscription checks."
+                  ? t("doctorForm.ownerSubtitle")
                   : isEdit ? t("admin.updateDoctorInfo") : t("admin.fillFormToAddDoctor")}
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium">
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur">
                   {selectedBranches.length > 0
-                    ? `${selectedBranches.length} branch${selectedBranches.length > 1 ? "es" : ""} selected`
-                    : "No branch selected yet"}
+                    ? t("doctorForm.branchesSelected", { count: selectedBranches.length })
+                    : t("doctorForm.noBranchSelected")}
                 </span>
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur">
-                  {formData.account_mode === "invite" ? "Invite-based access" : "Create login instantly"}
+                  {formData.account_mode === "invite" ? t("doctorForm.inviteAccess") : t("doctorForm.instantLogin")}
                 </span>
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur">
-                  Status: {formData.status}
+                  {t("doctorForm.statusLabel", { status: t(`enums.status.${formData.status}`, { defaultValue: formData.status }) })}
                 </span>
               </div>
             </div>
@@ -395,7 +395,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                 {doctorCode || "HLR_MED_ddmmyyyy_DT0001"}
               </p>
               <p className="mt-2 text-xs text-slate-400">
-                {isEdit ? "Doctor code is fixed after creation." : "Reserved automatically when this form opens."}
+                {isEdit ? t("doctorForm.codeFixed") : t("doctorForm.codeReserved")}
               </p>
             </div>
           </div>
@@ -430,7 +430,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                 {t("admin.basicInformation")}
               </h2>
               <p className="mt-1 text-sm text-text-dim">
-                Core identity, specialty, and access settings.
+                {t("doctorForm.basicDesc")}
               </p>
             </div>
             <div className="grid grid-cols-1 gap-5 px-6 py-6 md:grid-cols-2">
@@ -443,7 +443,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                   name="full_name"
                   value={formData.full_name}
                   onChange={handleInputChange}
-                  placeholder="Dr. John Doe"
+                  placeholder={t("common.placeholderDoctorName")}
                   className={inputClassName}
                 />
               </div>
@@ -528,10 +528,10 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
           <section className={cardClassName}>
             <div className="border-b border-border-main px-6 py-5">
               <h2 className="text-lg font-semibold text-text-main">
-                Branch assignment and account access
+                {t("doctorForm.branchSection")}
               </h2>
               <p className="mt-1 text-sm text-text-dim">
-                Pick the working branches first, then decide how this doctor will sign in.
+                {t("doctorForm.branchSectionDesc")}
               </p>
             </div>
             <div className="space-y-5 px-6 py-6">
@@ -552,9 +552,9 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                       onChange={handleInputChange}
                       className="sr-only"
                     />
-                    <p className="text-sm font-semibold text-text-main">Create login now</p>
+                    <p className="text-sm font-semibold text-text-main">{t("doctorForm.manualTitle")}</p>
                     <p className="mt-1 text-sm text-text-dim">
-                      Add username and password immediately so the doctor can sign in right away.
+                      {t("doctorForm.manualDesc")}
                     </p>
                   </label>
                   <label
@@ -572,9 +572,9 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                       onChange={handleInputChange}
                       className="sr-only"
                     />
-                    <p className="text-sm font-semibold text-text-main">Invite by email</p>
+                    <p className="text-sm font-semibold text-text-main">{t("doctorForm.inviteTitle")}</p>
                     <p className="mt-1 text-sm text-text-dim">
-                      Generate a one-time setup link and send the onboarding handoff later.
+                      {t("doctorForm.inviteDesc")}
                     </p>
                   </label>
                 </div>
@@ -587,8 +587,8 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                   </label>
                   <span className="text-xs text-text-dim">
                     {selectedBranches.length > 0
-                      ? `${selectedBranches.length} selected`
-                      : "Select at least one branch"}
+                      ? t("doctorForm.selectedCount", { count: selectedBranches.length })
+                      : t("doctorForm.selectAtLeastOne")}
                   </span>
                 </div>
                 {branches.length === 0 ? (
@@ -615,10 +615,10 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                             />
                             <div>
                               <p className="text-sm font-semibold text-text-main">{branch.name}</p>
-                              <p className="mt-1 text-xs text-text-dim">{branch.code || "No branch code"}</p>
+                              <p className="mt-1 text-xs text-text-dim">{branch.code || t("doctorForm.noBranchCode")}</p>
                               {typeof branch.doctor_count !== "undefined" && (
                                 <p className="mt-2 text-xs text-text-dim">
-                                  Current doctors: {branch.doctor_count}
+                                  {t("doctorForm.currentDoctors", { count: branch.doctor_count })}
                                 </p>
                               )}
                             </div>
@@ -666,7 +666,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
 
               {!isEdit && formData.account_mode === "invite" && (
                 <div className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 dark:border-blue-800 dark:bg-blue-950/20 dark:text-blue-300">
-                  A one-time setup link will be generated and shown after saving this doctor.
+                  {t("doctorForm.inviteNotice")}
                 </div>
               )}
             </div>
@@ -678,7 +678,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                 {t("admin.professionalDetails")}
               </h2>
               <p className="mt-1 text-sm text-text-dim">
-                Add clinical profile details and consultation settings.
+                {t("doctorForm.professionalDesc")}
               </p>
             </div>
             <div className="grid grid-cols-1 gap-5 px-6 py-6 md:grid-cols-2">
@@ -691,7 +691,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                   name="qualification"
                   value={formData.qualification}
                   onChange={handleInputChange}
-                  placeholder="MD, Bachelor of Medicine"
+                  placeholder={t("common.placeholderQualification")}
                   className={inputClassName}
                 />
               </div>
@@ -737,7 +737,7 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                 >
                   <option value="active">{t("admin.statusActive")}</option>
                   <option value="inactive">{t("admin.statusInactive")}</option>
-                  <option value="on_leave">On leave</option>
+                  <option value="on_leave">{t("admin.statusOnLeave")}</option>
                 </select>
               </div>
               <div className="md:col-span-2">
@@ -772,24 +772,24 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <section className={`${cardClassName} p-6`}>
-            <h2 className="text-base font-semibold text-text-main">Doctor snapshot</h2>
+            <h2 className="text-base font-semibold text-text-main">{t("doctorForm.snapshot")}</h2>
             <div className="mt-4 space-y-4 text-sm">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Primary branch</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("doctorForm.primaryBranch")}</p>
                 <p className="mt-1 font-medium text-text-main">
-                  {primarySelectedBranch?.name || "Waiting for branch selection"}
+                  {primarySelectedBranch?.name || t("doctorForm.waitingBranch")}
                 </p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Specialty</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("doctorForm.specialty")}</p>
                 <p className="mt-1 font-medium text-text-main">
-                  {selectedSpecialty?.name || "Not selected yet"}
+                  {selectedSpecialty?.name || t("doctorForm.notSelected")}
                 </p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Branch coverage</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("doctorForm.branchCoverage")}</p>
                 <p className="mt-1 font-medium text-text-main">
-                  {selectedBranchNames || "No branches selected"}
+                  {selectedBranchNames || t("doctorForm.noBranches")}
                 </p>
               </div>
             </div>
@@ -797,16 +797,16 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
 
           {fetchBranchesUrl && primarySelectedBranch && (
             <section className={`${cardClassName} p-6`}>
-              <h2 className="text-base font-semibold text-text-main">Subscription guardrail</h2>
+              <h2 className="text-base font-semibold text-text-main">{t("doctorForm.guardrail")}</h2>
               <p className="mt-2 text-sm text-text-dim">
-                The first selected branch is used to validate subscription and doctor limits.
+                {t("doctorForm.guardrailDesc")}
               </p>
               <div className="mt-4 rounded-2xl border border-border-main bg-bg-app p-4 dark:bg-slate-900">
                 <p className="font-medium text-text-main">{primarySelectedBranch.name}</p>
                 <p className="mt-1 text-sm text-text-dim">
                   {selectedBranchSubscription
-                    ? `${selectedBranchSubscription.plan_name} • ${selectedBranchSubscription.status}`
-                    : "No active subscription found"}
+                    ? `${selectedBranchSubscription.plan_name} • ${t(`enums.status.${selectedBranchSubscription.status}`, { defaultValue: selectedBranchSubscription.status })}`
+                    : t("doctorForm.noActiveSubscription")}
                 </p>
                 {hasFiniteDoctorLimit ? (
                   <>
@@ -824,38 +824,38 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
                       />
                     </div>
                     <p className="mt-2 text-xs text-text-dim">
-                      Doctors used: {selectedBranchDoctorCount}/{selectedBranchDoctorLimit}
+                      {t("doctorForm.doctorsUsed", { used: selectedBranchDoctorCount, limit: selectedBranchDoctorLimit })}
                     </p>
                   </>
                 ) : (
-                  <p className="mt-3 text-xs text-text-dim">Doctor limit: Unlimited</p>
+                  <p className="mt-3 text-xs text-text-dim">{t("doctorForm.unlimited")}</p>
                 )}
               </div>
 
               {!selectedBranchHasSubscription && (
                 <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
-                  This branch has no active subscription record yet.
+                  {t("doctorForm.warnNoSubscription")}
                 </div>
               )}
 
               {selectedBranchHasSubscription && !selectedBranchSubscriptionActive && (
                 <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
-                  The selected branch subscription is inactive.
+                  {t("doctorForm.warnInactive")}
                 </div>
               )}
 
               {selectedBranchDoctorLimitReached && (
                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
-                  This branch has reached the doctor limit of its current plan.
+                  {t("doctorForm.warnLimit")}
                 </div>
               )}
             </section>
           )}
 
           <section className={`${cardClassName} p-6`}>
-            <h2 className="text-base font-semibold text-text-main">Actions</h2>
+            <h2 className="text-base font-semibold text-text-main">{t("doctorForm.actions")}</h2>
             <p className="mt-2 text-sm text-text-dim">
-              Review the doctor profile, then save when everything looks correct.
+              {t("doctorForm.actionsDesc")}
             </p>
             <div className="mt-5 space-y-3">
               <button

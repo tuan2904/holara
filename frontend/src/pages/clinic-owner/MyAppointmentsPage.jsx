@@ -12,14 +12,14 @@ import { getDoctorsByOwnerBranchesApi } from "../../services/doctorService";
 const PAGE_SIZE = 15;
 
 const STATUS_OPTIONS = [
-  { value: "",            fallback: "All statuses" },
-  { value: "scheduled",   fallback: "Scheduled" },
-  { value: "confirmed",   fallback: "Confirmed" },
-  { value: "checked_in",  fallback: "Checked in" },
-  { value: "in_progress", fallback: "In progress" },
-  { value: "completed",   fallback: "Completed" },
-  { value: "cancelled",   fallback: "Cancelled" },
-  { value: "no_show",     fallback: "No show" },
+  { value: "",            labelKey: "admin.allStatuses", fallback: "All statuses" },
+  { value: "scheduled",   labelKey: "admin.statusScheduled", fallback: "Scheduled" },
+  { value: "confirmed",   labelKey: "admin.statusConfirmed", fallback: "Confirmed" },
+  { value: "checked_in",  labelKey: "admin.statusCheckedIn", fallback: "Checked in" },
+  { value: "in_progress", labelKey: "admin.statusInProgress", fallback: "In progress" },
+  { value: "completed",   labelKey: "admin.statusCompleted", fallback: "Completed" },
+  { value: "cancelled",   labelKey: "admin.statusCancelled", fallback: "Cancelled" },
+  { value: "no_show",     labelKey: "admin.statusNoShow", fallback: "No show" },
 ];
 
 const STATUS_CLS = {
@@ -32,9 +32,9 @@ const STATUS_CLS = {
   no_show:     "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400",
 };
 
-const statusLabel = (status) => {
+const statusLabel = (status, t) => {
   const opt = STATUS_OPTIONS.find((o) => o.value === status);
-  return opt ? opt.fallback : status;
+  return opt ? t(opt.labelKey, { defaultValue: opt.fallback }) : status;
 };
 
 const fmtDate = (d) => {
@@ -373,7 +373,7 @@ const MyAppointmentsPage = () => {
                 <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
                   className="w-full rounded-lg border border-border-main bg-bg-app px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-indigo-500/30 dark:bg-slate-900">
                   {STATUS_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.fallback}</option>
+                    <option key={o.value} value={o.value}>{t(o.labelKey, { defaultValue: o.fallback })}</option>
                   ))}
                 </select>
               </div>
@@ -461,13 +461,13 @@ const MyAppointmentsPage = () => {
                   <td className="px-4 py-3">
                     <p className="max-w-[180px] truncate text-sm text-text-dim" title={app.reason}>{app.reason || "—"}</p>
                     <span className="mt-1 inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
-                      {app.appointment_type}
+                      {t(`enums.appointmentType.${app.appointment_type}`, { defaultValue: app.appointment_type })}
                     </span>
                   </td>
                   {/* Status */}
                   <td className="whitespace-nowrap px-4 py-3">
                     <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLS[app.status] || "bg-slate-100 text-slate-600"}`}>
-                      {statusLabel(app.status)}
+                      {statusLabel(app.status, t)}
                     </span>
                   </td>
                   {/* Actions */}
@@ -500,7 +500,7 @@ const MyAppointmentsPage = () => {
                 </p>
               </div>
               <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLS[app.status] || "bg-slate-100 text-slate-600"}`}>
-                {statusLabel(app.status)}
+                {statusLabel(app.status, t)}
               </span>
             </div>
 
@@ -527,7 +527,7 @@ const MyAppointmentsPage = () => {
                   </span>
                 )}
                 <span className="inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
-                  {app.appointment_type}
+                  {t(`enums.appointmentType.${app.appointment_type}`, { defaultValue: app.appointment_type })}
                 </span>
               </div>
               {app.reason && <p className="truncate text-xs text-text-dim">{app.reason}</p>}
@@ -573,7 +573,7 @@ const MyAppointmentsPage = () => {
             <p className="mt-2 text-sm text-text-dim">
               {t("owner.changeStatusTo", { defaultValue: "Change status to" })}{" "}
               <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_CLS[confirmState.newStatus] || ""}`}>
-                {statusLabel(confirmState.newStatus)}
+                {statusLabel(confirmState.newStatus, t)}
               </span>
             </p>
             <div className="mt-5 flex gap-3">

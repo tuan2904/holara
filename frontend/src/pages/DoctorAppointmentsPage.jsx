@@ -71,14 +71,14 @@ const StatusPill = ({ status, label }) => {
   );
 };
 
-const TypeBadge = ({ type }) => (
+const TypeBadge = ({ type, t }) => (
   <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
     type === "online"
       ? "bg-cyan-100/70 text-cyan-700 ring-1 ring-cyan-200/50 dark:bg-cyan-900/20 dark:text-cyan-300 dark:ring-cyan-700/30"
       : "bg-slate-100/70 text-slate-600 ring-1 ring-slate-200/50 dark:bg-slate-800/40 dark:text-slate-400 dark:ring-slate-600/30"
   }`}>
     {type === "online" ? <Video className="h-2.5 w-2.5" /> : <Monitor className="h-2.5 w-2.5" />}
-    {type}
+    {t(`enums.appointmentType.${type}`, { defaultValue: type })}
   </span>
 );
 
@@ -268,7 +268,7 @@ const DoctorAppointmentsPage = () => {
               </p>
               <p className="text-xs text-slate-400">
                 {dayLabel(nextAppointment.appointment_date, t) || fmtDate(nextAppointment.appointment_date, i18n.language)}
-                {nextAppointment.appointment_type === "online" && " · 🎥 Online"}
+                {nextAppointment.appointment_type === "online" && ` · 🎥 ${t("enums.appointmentType.online")}`}
               </p>
             </div>
             <button onClick={() => navigate(`/doctor/appointments/${nextAppointment.id}`)}
@@ -463,10 +463,10 @@ const DoctorAppointmentsPage = () => {
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-sm font-bold text-text-main truncate">{app.patient_name || "—"}</span>
                             <StatusPill status={app.status} label={sLabel[app.status] || app.status} />
-                            <TypeBadge type={app.appointment_type} />
+                            <TypeBadge type={app.appointment_type} t={t} />
                             {app.recurring_id && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                                <Sparkles className="h-3 w-3" /> Recurring
+                                <Sparkles className="h-3 w-3" /> {t("doctor.appointments.recurring")}
                               </span>
                             )}
                           </div>
@@ -531,7 +531,7 @@ const DoctorAppointmentsPage = () => {
                     </td>
                     <td className="px-5 py-4 hidden md:table-cell">
                       <p className="max-w-[240px] truncate text-text-main" title={app.reason}>{app.reason || "—"}</p>
-                      <div className="mt-1"><TypeBadge type={app.appointment_type} /></div>
+                      <div className="mt-1"><TypeBadge type={app.appointment_type} t={t} /></div>
                     </td>
                     <td className="px-5 py-4"><StatusPill status={app.status} label={sLabel[app.status] || app.status} /></td>
                     <td className="px-5 py-4 text-right" onClick={(e) => e.stopPropagation()}>

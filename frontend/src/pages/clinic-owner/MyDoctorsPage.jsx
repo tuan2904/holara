@@ -292,7 +292,7 @@ const MyDoctorsPage = () => {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLS[d.status] || STATUS_CLS.inactive}`}>
-                      {d.status}
+                      {t(`enums.status.${d.status}`, { defaultValue: d.status })}
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -343,7 +343,7 @@ const MyDoctorsPage = () => {
                 {d.email && <p className="mt-0.5 text-xs text-text-dim">{d.email}</p>}
               </div>
               <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLS[d.status] || STATUS_CLS.inactive}`}>
-                {d.status}
+                {t(`enums.status.${d.status}`, { defaultValue: d.status })}
               </span>
             </div>
 

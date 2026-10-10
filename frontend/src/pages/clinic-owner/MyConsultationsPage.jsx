@@ -249,11 +249,11 @@ const MyConsultationsPage = () => {
 
   const statusBadge = (status) => {
     const m = STATUS_MAP[status] || STATUS_MAP.pending;
-    return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${m.cls}`}>{m.label}</span>;
+    return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${m.cls}`}>{t(`admin.status_${status}`, { defaultValue: m.label })}</span>;
   };
   const priorityBadge = (priority) => {
     const m = PRIORITY_MAP[priority] || PRIORITY_MAP.normal;
-    return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${m.cls}`}>{m.label}</span>;
+    return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${m.cls}`}>{t(`admin.priority_${priority}`, { defaultValue: m.label })}</span>;
   };
 
   return (
@@ -459,7 +459,7 @@ const MyConsultationsPage = () => {
                   className="group cursor-pointer hover:bg-bg-app dark:hover:bg-slate-900/40 transition">
                   <td className="px-4 py-3">
                     <p className="text-sm font-semibold text-text-main">{c.patient_name}</p>
-                    <p className="text-xs text-text-dim">{c.gender} • {fmtDate(c.date_of_birth)}</p>
+                    <p className="text-xs text-text-dim">{c.gender ? t(`enums.gender.${c.gender}`, { defaultValue: c.gender }) : "—"} • {fmtDate(c.date_of_birth)}</p>
                   </td>
                   <td className="px-4 py-3">
                     {c.doctor_name ? (
@@ -508,7 +508,7 @@ const MyConsultationsPage = () => {
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-text-main">{c.patient_name}</p>
-                <p className="mt-0.5 text-xs text-text-dim">{c.gender} • {fmtDate(c.date_of_birth)}</p>
+                <p className="mt-0.5 text-xs text-text-dim">{c.gender ? t(`enums.gender.${c.gender}`, { defaultValue: c.gender }) : "—"} • {fmtDate(c.date_of_birth)}</p>
               </div>
               {statusBadge(c.status)}
             </div>
@@ -621,7 +621,7 @@ const MyConsultationsPage = () => {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-text-main">{detailData.patient_name}</p>
-                        <p className="text-xs text-text-dim">{detailData.gender} • {fmtDate(detailData.date_of_birth)}</p>
+                        <p className="text-xs text-text-dim">{detailData.gender ? t(`enums.gender.${detailData.gender}`, { defaultValue: detailData.gender }) : "—"} • {fmtDate(detailData.date_of_birth)}</p>
                       </div>
                     </div>
                     {detailData.doctor_name && (

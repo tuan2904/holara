@@ -43,12 +43,12 @@ const RolePermissionsModal = ({ roleId, roleName, onClose, onSuccess }) => {
       setRolePermissions(rolePermResponse.data || []);
       setSelectedPermissions(assignedIds);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch permissions");
+      setError(err.response?.data?.message || t("errors.fetchPermissions"));
       console.error("Error fetching permissions:", err);
     } finally {
       setLoading(false);
     }
-  }, [roleId]);
+  }, [roleId, t]);
 
   // Fetch permissions and role permissions on mount
   useEffect(() => {
@@ -104,7 +104,7 @@ const RolePermissionsModal = ({ roleId, roleName, onClose, onSuccess }) => {
         onSuccess?.();
       }, 1500);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save permissions");
+      setError(err.response?.data?.message || t("errors.savePermissions"));
       console.error("Error saving permissions:", err);
     } finally {
       setSaving(false);
@@ -124,7 +124,7 @@ const RolePermissionsModal = ({ roleId, roleName, onClose, onSuccess }) => {
 
   // Group permissions by module
   const groupedPermissions = filteredPermissions.reduce((acc, perm) => {
-    const module = perm.module_name || "General";
+    const module = perm.module_name || t("admin.moduleGeneral");
     if (!acc[module]) {
       acc[module] = [];
     }

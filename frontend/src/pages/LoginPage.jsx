@@ -159,7 +159,7 @@ const LoginPage = () => {
         <div className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_460px] lg:gap-12">
           <div className="hidden lg:flex lg:flex-col lg:justify-center">
             <p className="inline-flex w-fit items-center rounded-full border border-[#E06666]/25 bg-[#FFF5F5] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#C14D4D] dark:border-[#E06666]/35 dark:bg-[#2B1F28] dark:text-[#F3A3A3]">
-              {isVi ? "MeDecode Access" : "MeDecode Access"}
+              {isVi ? "Truy cập MeDecode" : "MeDecode Access"}
             </p>
             <h1 className="mt-6 max-w-lg text-5xl font-semibold tracking-tight text-gray-900 dark:text-slate-100">
               {isVi 
@@ -186,7 +186,7 @@ const LoginPage = () => {
           <div className="rounded-[28px] border border-gray-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:border-slate-700 dark:bg-[#141B29] dark:shadow-[0_24px_60px_rgba(0,0,0,0.28)] sm:p-8">
             <div className="mb-8">
               <p className="inline-flex items-center rounded-full border border-[#E06666]/20 bg-[#FFF5F5] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#C14D4D] dark:border-[#E06666]/30 dark:bg-[#2B1F28] dark:text-[#F3A3A3]">
-                {isVi ? "Sign in" : "Sign in"}
+                {isVi ? "Đăng nhập" : "Sign in"}
               </p>
               <h2 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900 dark:text-slate-100">
                 {t("auth.signIn")}

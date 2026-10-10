@@ -379,7 +379,7 @@ const ConsultationsPage = () => {
                   className="group cursor-pointer hover:bg-bg-app dark:hover:bg-slate-900/40 transition">
                   <td className="px-4 py-3">
                     <p className="text-sm font-semibold text-text-main">{c.patient_name}</p>
-                    <p className="text-xs text-text-dim">{c.gender} • {fmtDate(c.date_of_birth)}</p>
+                    <p className="text-xs text-text-dim">{c.gender ? t(`enums.gender.${c.gender}`, { defaultValue: c.gender }) : "—"} • {fmtDate(c.date_of_birth)}</p>
                   </td>
                   <td className="px-4 py-3">
                     {c.doctor_name ? (
@@ -418,7 +418,7 @@ const ConsultationsPage = () => {
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-sm font-bold text-text-main">{c.patient_name}</p>
-                <p className="mt-0.5 text-xs text-text-dim">{c.gender} • {fmtDate(c.date_of_birth)}</p>
+                <p className="mt-0.5 text-xs text-text-dim">{c.gender ? t(`enums.gender.${c.gender}`, { defaultValue: c.gender }) : "—"} • {fmtDate(c.date_of_birth)}</p>
               </div>
               {statusBadge(c.status)}
             </div>
@@ -525,7 +525,7 @@ const ConsultationsPage = () => {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-text-main">{detailData.patient_name}</p>
-                        <p className="text-xs text-text-dim">{detailData.gender} • {fmtDate(detailData.date_of_birth)}</p>
+                        <p className="text-xs text-text-dim">{detailData.gender ? t(`enums.gender.${detailData.gender}`, { defaultValue: detailData.gender }) : "—"} • {fmtDate(detailData.date_of_birth)}</p>
                       </div>
                     </div>
                     {detailData.doctor_name && (

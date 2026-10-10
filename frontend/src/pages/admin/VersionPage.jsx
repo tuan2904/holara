@@ -5,77 +5,77 @@ const VERSION_HISTORY = [
   {
     version: "v1.7.0",
     date: "2026-04-06",
-    tag: "UI & Build Optimization",
+    tag: { en: "UI & Build Optimization", vi: "Tối ưu giao diện & build" },
     highlights: [
-      "✨ Optimized Doctor Consultation UI (Desktop & Mobile)",
-      "💊 Fixed Prescription creation & detail logic",
-      "🛠️ Resolved all Frontend Lint & Build blockers",
-      "🚀 Fixed CI/CD Pipeline (DigitalOcean path alignment)",
-      "📅 Implemented Recurring Appointment Module (Backend)",
+      { en: "✨ Optimized Doctor Consultation UI (Desktop & Mobile)", vi: "✨ Tối ưu giao diện tư vấn của bác sĩ (máy tính & di động)" },
+      { en: "💊 Fixed Prescription creation & detail logic", vi: "💊 Sửa logic tạo và xem chi tiết đơn thuốc" },
+      { en: "🛠️ Resolved all Frontend Lint & Build blockers", vi: "🛠️ Khắc phục toàn bộ lỗi lint & build ở frontend" },
+      { en: "🚀 Fixed CI/CD Pipeline (DigitalOcean path alignment)", vi: "🚀 Sửa pipeline CI/CD (đồng bộ đường dẫn DigitalOcean)" },
+      { en: "📅 Implemented Recurring Appointment Module (Backend)", vi: "📅 Triển khai module lịch hẹn định kỳ (backend)" },
     ],
   },
   {
     version: "v1.6.0",
     date: "2025-07-01",
-    tag: "Performance & UX",
+    tag: { en: "Performance & UX", vi: "Hiệu năng & trải nghiệm" },
     highlights: [
-      "Improved initial load time",
-      "Optimized images and static assets",
-      "Fixed minor navigation bugs",
+      { en: "Improved initial load time", vi: "Cải thiện thời gian tải ban đầu" },
+      { en: "Optimized images and static assets", vi: "Tối ưu hình ảnh và tài nguyên tĩnh" },
+      { en: "Fixed minor navigation bugs", vi: "Sửa các lỗi điều hướng nhỏ" },
     ],
   },
   {
     version: "v1.4.0",
     date: "2025-06-13",
-    tag: "Patient Zone",
+    tag: { en: "Patient Zone", vi: "Khu vực bệnh nhân" },
     highlights: [
-      "Patient Dashboard with real-time data (9 API queries)",
-      "Rose theme + i18n polish for all patient pages",
-      "PatientMyDoctorsPage, PatientMyBranchesPage full rewrite",
-      "PatientAppointmentDetailPage + ConsultationHistoryPage polish",
+      { en: "Patient Dashboard with real-time data (9 API queries)", vi: "Bảng điều khiển bệnh nhân với dữ liệu thời gian thực (9 truy vấn API)" },
+      { en: "Rose theme + i18n polish for all patient pages", vi: "Giao diện tông hồng + hoàn thiện đa ngôn ngữ cho mọi trang bệnh nhân" },
+      { en: "PatientMyDoctorsPage, PatientMyBranchesPage full rewrite", vi: "Viết lại hoàn toàn trang Bác sĩ của tôi, Chi nhánh của tôi" },
+      { en: "PatientAppointmentDetailPage + ConsultationHistoryPage polish", vi: "Hoàn thiện trang Chi tiết lịch hẹn và Lịch sử tư vấn" },
     ],
   },
   {
     version: "v1.3.0",
     date: "2025-06-12",
-    tag: "Doctor Zone",
+    tag: { en: "Doctor Zone", vi: "Khu vực bác sĩ" },
     highlights: [
-      "Doctor Dashboard with real data, cyan theme",
-      "Doctor schedule page, appointments & consultations mobile polish",
-      "DoctorConsultationDetailPage with AI image analysis",
+      { en: "Doctor Dashboard with real data, cyan theme", vi: "Bảng điều khiển bác sĩ với dữ liệu thật, tông xanh cyan" },
+      { en: "Doctor schedule page, appointments & consultations mobile polish", vi: "Tối ưu di động cho trang lịch làm việc, lịch hẹn và tư vấn của bác sĩ" },
+      { en: "DoctorConsultationDetailPage with AI image analysis", vi: "Trang chi tiết tư vấn của bác sĩ có phân tích ảnh bằng AI" },
     ],
   },
   {
     version: "v1.2.0",
     date: "2025-06-11",
-    tag: "Billing & Clinic Owner",
+    tag: { en: "Billing & Clinic Owner", vi: "Thanh toán & Chủ phòng khám" },
     highlights: [
-      "Phase 1 — Billing History & Invoice",
-      "Clinic-owner appointments/consultations pages",
-      "Admin schedules management",
-      "Mobile optimizations across all roles",
+      { en: "Phase 1 — Billing History & Invoice", vi: "Giai đoạn 1 — Lịch sử thanh toán & Hóa đơn" },
+      { en: "Clinic-owner appointments/consultations pages", vi: "Trang lịch hẹn/tư vấn cho chủ phòng khám" },
+      { en: "Admin schedules management", vi: "Quản lý lịch làm việc cho quản trị viên" },
+      { en: "Mobile optimizations across all roles", vi: "Tối ưu di động cho mọi vai trò" },
     ],
   },
   {
     version: "v1.1.0",
     date: "2025-06-09",
-    tag: "Mobile Optimization",
+    tag: { en: "Mobile Optimization", vi: "Tối ưu di động" },
     highlights: [
-      "Full mobile optimization for admin pages",
-      "Color theme system for all admin pages",
-      "Permissions system implementation",
-      "Patient consultation UI mobile optimization",
+      { en: "Full mobile optimization for admin pages", vi: "Tối ưu di động toàn diện cho các trang quản trị" },
+      { en: "Color theme system for all admin pages", vi: "Hệ thống màu chủ đề cho mọi trang quản trị" },
+      { en: "Permissions system implementation", vi: "Triển khai hệ thống phân quyền" },
+      { en: "Patient consultation UI mobile optimization", vi: "Tối ưu di động cho giao diện tư vấn của bệnh nhân" },
     ],
   },
   {
     version: "v1.0.0",
     date: "2025-06-01",
-    tag: "Initial Release",
+    tag: { en: "Initial Release", vi: "Phát hành đầu tiên" },
     highlights: [
-      "Multi-branch booking system",
-      "Design system upgrade & login flow",
-      "Docker Compose production deployment",
-      "Core modules: Auth, Appointments, Consultations, Doctors, Patients",
+      { en: "Multi-branch booking system", vi: "Hệ thống đặt lịch đa chi nhánh" },
+      { en: "Design system upgrade & login flow", vi: "Nâng cấp hệ thống thiết kế & luồng đăng nhập" },
+      { en: "Docker Compose production deployment", vi: "Triển khai production bằng Docker Compose" },
+      { en: "Core modules: Auth, Appointments, Consultations, Doctors, Patients", vi: "Các module lõi: Xác thực, Lịch hẹn, Tư vấn, Bác sĩ, Bệnh nhân" },
     ],
   },
 ];
@@ -83,7 +83,8 @@ const VERSION_HISTORY = [
 const CURRENT = VERSION_HISTORY[0];
 
 const VersionPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const tr = (text) => (i18n.language === "en" ? text.en : text.vi);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -95,7 +96,7 @@ const VersionPage = () => {
               {t("version.currentVersion", { defaultValue: "Current Version" })}
             </p>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">{CURRENT.version}</h1>
-            <p className="text-violet-100 mt-1">{CURRENT.tag}</p>
+            <p className="text-violet-100 mt-1">{tr(CURRENT.tag)}</p>
           </div>
           <div className="text-left sm:text-right">
             <p className="text-violet-200 text-xs font-medium uppercase tracking-wider">
@@ -143,7 +144,7 @@ const VersionPage = () => {
                   {ver.version}
                 </span>
                 <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-text-dim">
-                  {ver.tag}
+                  {tr(ver.tag)}
                 </span>
                 {idx === 0 && (
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
@@ -157,7 +158,7 @@ const VersionPage = () => {
               {ver.highlights.map((h, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-600 dark:text-slate-300">
                   <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${idx === 0 ? "bg-violet-500" : "bg-gray-300 dark:bg-slate-600"}`} />
-                  {h}
+                  {tr(h)}
                 </li>
               ))}
             </ul>

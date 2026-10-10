@@ -50,8 +50,8 @@ const ROLE_BADGE = {
   accountant:   "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40",
 };
 const ROLE_LABEL = {
-  super_admin:  "Super Admin",
-  admin:        "Admin",
+  super_admin:  "Quản trị viên cấp cao",
+  admin:        "Quản trị viên",
   doctor:       "Bác sĩ",
   patient:      "Bệnh nhân",
   receptionist: "Lễ tân",
@@ -530,15 +530,15 @@ const UserDetailPage = () => {
                             <td className="px-3 py-2.5 text-center">
                               {h.status === "active" ? (
                                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                  <CheckCircle2 className="h-3 w-3" /> Active
+                                  <CheckCircle2 className="h-3 w-3" /> Đang hoạt động
                                 </span>
                               ) : h.status === "expired" ? (
                                 <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-400">
-                                  <Clock className="h-3 w-3" /> Expired
+                                  <Clock className="h-3 w-3" /> Đã hết hạn
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                                  <XCircle className="h-3 w-3" /> Revoked
+                                  <XCircle className="h-3 w-3" /> Đã thu hồi
                                 </span>
                               )}
                             </td>

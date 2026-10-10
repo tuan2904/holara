@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { acceptDoctorInviteApi } from "../services/authService";
 
 const DoctorInviteSetupPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const token = useMemo(() => searchParams.get("token") || "", [searchParams]);
 
@@ -19,30 +21,30 @@ const DoctorInviteSetupPage = () => {
     setSuccess("");
 
     if (!token) {
-      setError("Missing invite token.");
+      setError(t("auth.inviteSetup.missingToken"));
       return;
     }
 
     if (!password || password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(t("auth.inviteSetup.passwordMin"));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Password confirmation does not match.");
+      setError(t("auth.inviteSetup.passwordMismatch"));
       return;
     }
 
     try {
       setSubmitting(true);
       const res = await acceptDoctorInviteApi({ token, password });
-      setSuccess(res?.message || "Account setup completed. Please login.");
+      setSuccess(res?.message || t("auth.inviteSetup.success"));
 
       setTimeout(() => {
         navigate("/login");
       }, 1200);
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to complete account setup.");
+      setError(err?.response?.data?.message || t("auth.inviteSetup.failed"));
     } finally {
       setSubmitting(false);
     }
@@ -51,9 +53,9 @@ const DoctorInviteSetupPage = () => {
   return (
     <div className="min-h-[calc(100vh-140px)] bg-[#FFF5F5] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-[#E06666] text-center">Doctor Account Setup</h1>
+        <h1 className="text-2xl font-bold text-[#E06666] text-center">{t("auth.inviteSetup.title")}</h1>
         <p className="text-sm text-gray-500 text-center mt-2">
-          Set your password for first-time login
+          {t("auth.inviteSetup.subtitle")}
         </p>
 
         {error && (
@@ -70,24 +72,24 @@ const DoctorInviteSetupPage = () => {
 
         <form className="mt-6 space-y-4" onSubmit={onSubmit}>
           <div>
-            <label className="block text-sm font-medium mb-1">New Password</label>
+            <label className="block text-sm font-medium mb-1">{t("auth.inviteSetup.newPassword")}</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-[#E06666] focus:ring-2 focus:ring-[#F7CACA]"
-              placeholder="Minimum 6 characters"
+              placeholder={t("auth.inviteSetup.newPasswordPlaceholder")}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Confirm Password</label>
+            <label className="block text-sm font-medium mb-1">{t("auth.inviteSetup.confirmPassword")}</label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-[#E06666] focus:ring-2 focus:ring-[#F7CACA]"
-              placeholder="Re-enter your password"
+              placeholder={t("auth.inviteSetup.confirmPasswordPlaceholder")}
             />
           </div>
 
@@ -96,7 +98,7 @@ const DoctorInviteSetupPage = () => {
             disabled={submitting}
             className="w-full rounded-lg bg-[#E06666] text-white py-2.5 font-semibold hover:bg-[#D55555] transition disabled:opacity-70"
           >
-            {submitting ? "Setting up..." : "Complete Setup"}
+            {submitting ? t("auth.inviteSetup.submitting") : t("auth.inviteSetup.submit")}
           </button>
         </form>
       </div>

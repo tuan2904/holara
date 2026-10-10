@@ -225,17 +225,17 @@ const PatientFormPage = () => {
     {
       id: 1,
       title: t("admin.basicInformation"),
-      description: "Identity, contact details, and branch access.",
+      description: t("patientForm.step1Desc"),
     },
     {
       id: 2,
       title: t("admin.medicalInformation"),
-      description: "Medical profile and patient status.",
+      description: t("patientForm.step2Desc"),
     },
     {
       id: 3,
       title: t("admin.emergencyContact"),
-      description: "Emergency contact and final review.",
+      description: t("patientForm.step3Desc"),
     },
   ];
   const inputClassName =
@@ -275,19 +275,19 @@ const PatientFormPage = () => {
               <p className="mt-1 text-sm text-slate-300">
                 {isEdit
                   ? t("admin.updatePatientInfo")
-                  : "A guided 3-step flow so the operator only sees the information needed at each moment."}
+                  : t("patientForm.subtitle")}
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium">
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur">
-                  Step {currentStep} / 3
+                  {t("patientForm.stepOf", { current: currentStep, total: 3 })}
                 </span>
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur">
                   {formData.branch_ids.length > 0
-                    ? `${formData.branch_ids.length} branch${formData.branch_ids.length > 1 ? "es" : ""}`
-                    : "No branch yet"}
+                    ? t("patientForm.branchCount", { count: formData.branch_ids.length })
+                    : t("patientForm.noBranchYet")}
                 </span>
                 <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 backdrop-blur">
-                  Status: {formData.status}
+                  {t("doctorForm.statusLabel", { status: t(`enums.status.${formData.status}`, { defaultValue: formData.status }) })}
                 </span>
               </div>
             </div>
@@ -298,7 +298,7 @@ const PatientFormPage = () => {
                 {formData.patient_code || "HLR_MED_ddmmyyyy_PT0001"}
               </p>
               <p className="mt-2 text-xs text-slate-400">
-                {isEdit ? "Patient code stays fixed after creation." : "Reserved automatically when this form opens."}
+                {isEdit ? t("patientForm.codeFixed") : t("doctorForm.codeReserved")}
               </p>
             </div>
           </div>
@@ -371,7 +371,7 @@ const PatientFormPage = () => {
               <div className="border-b border-border-main px-6 py-5">
                 <h2 className="text-lg font-semibold text-text-main">{t("admin.basicInformation")}</h2>
                 <p className="mt-1 text-sm text-text-dim">
-                  Focus only on the essential contact details first.
+                  {t("patientForm.basicDesc")}
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-5 px-6 py-6 md:grid-cols-2">
@@ -384,7 +384,7 @@ const PatientFormPage = () => {
                     name="full_name"
                     value={formData.full_name}
                     onChange={handleInputChange}
-                    placeholder="John Doe"
+                    placeholder={t("common.placeholderFullName")}
                     className={inputClassName}
                   />
                 </div>
@@ -441,7 +441,7 @@ const PatientFormPage = () => {
                     onChange={handleInputChange}
                     className={inputClassName}
                   >
-                    <option value="">Select Gender</option>
+                    <option value="">{t("common.selectGender")}</option>
                     <option value="male">{t("admin.genderMale")}</option>
                     <option value="female">{t("admin.genderFemale")}</option>
                     <option value="other">{t("admin.genderOther")}</option>
@@ -470,7 +470,7 @@ const PatientFormPage = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    placeholder="123 Main Street"
+                    placeholder={t("common.placeholderAddress")}
                     className={inputClassName}
                   />
                 </div>
@@ -482,8 +482,8 @@ const PatientFormPage = () => {
                     </label>
                     <span className="text-xs text-text-dim">
                       {formData.branch_ids.length > 0
-                        ? `${formData.branch_ids.length} selected`
-                        : "Choose at least one branch"}
+                        ? t("doctorForm.selectedCount", { count: formData.branch_ids.length })
+                        : t("doctorForm.selectAtLeastOne")}
                     </span>
                   </div>
                   {branches.length === 0 ? (
@@ -510,7 +510,7 @@ const PatientFormPage = () => {
                               />
                               <div>
                                 <p className="text-sm font-semibold text-text-main">{branch.name}</p>
-                                <p className="mt-1 text-xs text-text-dim">{branch.code || "No branch code"}</p>
+                                <p className="mt-1 text-xs text-text-dim">{branch.code || t("doctorForm.noBranchCode")}</p>
                               </div>
                             </div>
                           </label>
@@ -529,7 +529,7 @@ const PatientFormPage = () => {
               <div className="border-b border-border-main px-6 py-5">
                 <h2 className="text-lg font-semibold text-text-main">{t("admin.medicalInformation")}</h2>
                 <p className="mt-1 text-sm text-text-dim">
-                  Capture medical context after the basic patient shell is ready.
+                  {t("patientForm.medicalDesc")}
                 </p>
               </div>
               <div className="space-y-5 px-6 py-6">
@@ -544,7 +544,7 @@ const PatientFormPage = () => {
                       onChange={handleInputChange}
                       className={inputClassName}
                     >
-                      <option value="">Select Blood Group</option>
+                      <option value="">{t("common.selectBloodGroup")}</option>
                       <option value="O+">O+</option>
                       <option value="O-">O-</option>
                       <option value="A+">A+</option>
@@ -568,7 +568,7 @@ const PatientFormPage = () => {
                     >
                       <option value="active">{t("admin.statusActive")}</option>
                       <option value="inactive">{t("admin.statusInactive")}</option>
-                      <option value="blocked">Blocked</option>
+                      <option value="blocked">{t("admin.statusBlocked")}</option>
                     </select>
                   </div>
                 </div>
@@ -609,7 +609,7 @@ const PatientFormPage = () => {
               <div className="border-b border-border-main px-6 py-5">
                 <h2 className="text-lg font-semibold text-text-main">{t("admin.emergencyContact")}</h2>
                 <p className="mt-1 text-sm text-text-dim">
-                  Final safety contact details and a quick review before saving.
+                  {t("patientForm.emergencyDesc")}
                 </p>
               </div>
               <div className="space-y-6 px-6 py-6">
@@ -623,7 +623,7 @@ const PatientFormPage = () => {
                       name="emergency_contact_name"
                       value={formData.emergency_contact_name}
                       onChange={handleInputChange}
-                      placeholder="John Smith"
+                      placeholder={t("common.placeholderEmergencyName")}
                       className={inputClassName}
                     />
                   </div>
@@ -645,16 +645,16 @@ const PatientFormPage = () => {
 
                 <div className="rounded-2xl border border-border-main bg-bg-app p-5 dark:bg-slate-900">
                   <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-text-dim">
-                    Final review
+                    {t("patientForm.finalReview")}
                   </h3>
                   <div className="mt-4 grid gap-4 md:grid-cols-2">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Patient</p>
+                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("patientForm.reviewPatient")}</p>
                       <p className="mt-1 font-medium text-text-main">{formData.full_name || "-"}</p>
                       <p className="mt-1 text-sm text-text-dim">{formData.phone || "-"}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Branches</p>
+                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("patientForm.reviewBranches")}</p>
                       <p className="mt-1 font-medium text-text-main">
                         {branches
                           .filter((branch) => formData.branch_ids.includes(branch.id))
@@ -663,15 +663,15 @@ const PatientFormPage = () => {
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Medical</p>
+                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("patientForm.reviewMedical")}</p>
                       <p className="mt-1 font-medium text-text-main">
-                        {formData.blood_group || "No blood group set"}
+                        {formData.blood_group || t("patientForm.noBloodGroup")}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Emergency</p>
+                      <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("patientForm.reviewEmergency")}</p>
                       <p className="mt-1 font-medium text-text-main">
-                        {formData.emergency_contact_name || "No emergency contact yet"}
+                        {formData.emergency_contact_name || t("patientForm.noEmergency")}
                       </p>
                     </div>
                   </div>
@@ -743,27 +743,27 @@ const PatientFormPage = () => {
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <section className={`${cardClassName} p-6`}>
-            <h2 className="text-base font-semibold text-text-main">Why this flow</h2>
+            <h2 className="text-base font-semibold text-text-main">{t("patientForm.whyTitle")}</h2>
             <p className="mt-2 text-sm text-text-dim">
-              The form is split into smaller decisions so operators can finish the critical patient shell first, then enrich medical and emergency details without overload.
+              {t("patientForm.whyDesc")}
             </p>
           </section>
 
           <section className={`${cardClassName} p-6`}>
-            <h2 className="text-base font-semibold text-text-main">Current progress</h2>
+            <h2 className="text-base font-semibold text-text-main">{t("patientForm.progress")}</h2>
             <div className="mt-4 space-y-4 text-sm">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Step</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("patientForm.step")}</p>
                 <p className="mt-1 font-medium text-text-main">{currentStep} / 3</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Selected branches</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("patientForm.selectedBranches")}</p>
                 <p className="mt-1 font-medium text-text-main">{formData.branch_ids.length}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">Emergency contact</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-text-dim">{t("admin.emergencyContact")}</p>
                 <p className="mt-1 font-medium text-text-main">
-                  {formData.emergency_contact_name || "Not set yet"}
+                  {formData.emergency_contact_name || t("patientForm.notSet")}
                 </p>
               </div>
             </div>

@@ -389,10 +389,10 @@ const DoctorSchedulePage = () => {
 
                         <div className="flex flex-wrap gap-2">
                           <span className="rounded-full bg-[#fff4f2] px-3 py-1 text-xs font-semibold text-[#E06666] dark:bg-red-950/20">
-                            Slot {shift.slot_duration}m
+                            {t("admin.slotMinutes", { count: shift.slot_duration })}
                           </span>
                           <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase ${STATUS_STYLES[shift.status] || STATUS_STYLES.inactive}`}>
-                            {shift.status}
+                            {t(`enums.status.${shift.status}`, { defaultValue: shift.status })}
                           </span>
                         </div>
                       </div>

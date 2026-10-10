@@ -20,9 +20,9 @@ const DOCTOR_SUGGESTIONS = [
 ];
 
 const SIDEBAR_ITEMS = [
-  { label: "Agents", icon: Bot },
-  { label: "Search", icon: Search },
-  { label: "Library", icon: Library },
+  { key: "agents", label: "Agents", icon: Bot },
+  { key: "search", label: "Search", icon: Search },
+  { key: "library", label: "Library", icon: Library },
 ];
 
 const normalizeArray = (payload) => {
@@ -209,12 +209,12 @@ const HoloraMindPage = () => {
           <div className="mt-8 flex-1 overflow-y-auto space-y-6 custom-scrollbar pr-1">
             {/* Quick Actions */}
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500 mb-3 px-1">WORKSPACE</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500 mb-3 px-1">{t("holoraMind.workspace")}</p>
               <div className="space-y-1">
                 {SIDEBAR_ITEMS.map((item) => (
                   <div key={item.label} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition cursor-pointer">
                     <item.icon size={16} />
-                    <span>{item.label}</span>
+                    <span>{t(`holoraMind.sidebar.${item.key}`, { defaultValue: item.label })}</span>
                   </div>
                 ))}
               </div>
@@ -223,7 +223,7 @@ const HoloraMindPage = () => {
             {/* Chat History */}
             <div>
               <div className="flex items-center justify-between mb-3 px-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">HISTORY</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-slate-500">{t("holoraMind.history")}</p>
                 <div className={`w-1.5 h-1.5 rounded-full ${a.bg} animate-pulse`}></div>
               </div>
               <div className="space-y-1.5">
@@ -261,7 +261,7 @@ const HoloraMindPage = () => {
                 </div>
                 <div className="flex-1 overflow-hidden">
                   <p className="text-sm font-semibold truncate">{user?.full_name}</p>
-                  <p className="text-[10px] text-gray-500 dark:text-slate-500 uppercase tracking-tight">{user?.role === "super_admin" ? "Master Admin" : user?.role}</p>
+                  <p className="text-[10px] text-gray-500 dark:text-slate-500 uppercase tracking-tight">{user?.role ? t(`enums.role.${user.role}`, { defaultValue: user.role }) : ""}</p>
                 </div>
              </div>
           </div>
@@ -290,7 +290,7 @@ const HoloraMindPage = () => {
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button onClick={() => navigate(homePath)} className="text-xs font-semibold px-2 sm:px-3 py-1.5 rounded-lg border dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800 whitespace-nowrap">
               <span className="hidden sm:inline">{t("holoraMind.backHome", { defaultValue: "Back Home" })}</span>
-              <span className="sm:hidden">← Home</span>
+              <span className="sm:hidden">← {t("common.homepage")}</span>
             </button>
             <div className={`hidden xs:flex sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full ${a.bgLight} ${a.text} text-[10px] font-bold uppercase tracking-wider`}>
                <Sparkles size={12} />
@@ -372,7 +372,7 @@ const HoloraMindPage = () => {
               <div className="flex items-center justify-between px-3 py-2 border-t border-gray-100 dark:border-slate-800">
                 <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium truncate pr-2">
                   MeDecode AI v1.0
-                  <span className="hidden sm:inline"> • AI-Native Assistant</span>
+                  <span className="hidden sm:inline"> • {t("holoraMind.aiNativeAssistant")}</span>
                 </span>
                 <button
                   type="submit"

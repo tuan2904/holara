@@ -210,7 +210,7 @@ const UserFormPage = () => {
                 name="full_name"
                 value={formData.full_name}
                 onChange={handleInputChange}
-                placeholder="John Doe"
+                placeholder={t("common.placeholderFullName")}
                 className="w-full px-4 py-2.5 border border-border-main bg-bg-app rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E06666]/30 focus:border-transparent transition dark:bg-slate-700"
               />
             </div>
@@ -328,7 +328,7 @@ const UserFormPage = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2.5 border border-border-main bg-bg-app rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E06666]/30 focus:border-transparent transition dark:bg-slate-700"
               >
-                <option value="">Select Gender</option>
+                <option value="">{t("common.selectGender")}</option>
                 <option value="male">{t("admin.genderMale")}</option>
                 <option value="female">{t("admin.genderFemale")}</option>
                 <option value="other">{t("admin.genderOther")}</option>
@@ -360,7 +360,7 @@ const UserFormPage = () => {
               >
                 <option value="active">{t("admin.statusActive")}</option>
                 <option value="inactive">{t("admin.statusInactive")}</option>
-                <option value="blocked">Blocked</option>
+                <option value="blocked">{t("admin.statusBlocked")}</option>
               </select>
             </div>
 

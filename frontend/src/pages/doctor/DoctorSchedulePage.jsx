@@ -410,7 +410,7 @@ const DoctorSchedulePage = () => {
                             {shift.slot_duration}{t("common.minutes", { defaultValue: "min" })} / slot
                           </span>
                           <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase ${STATUS_STYLES[shift.status] || STATUS_STYLES.inactive}`}>
-                            {shift.status}
+                            {t(`enums.status.${shift.status}`, { defaultValue: shift.status })}
                           </span>
                         </div>
                       </div>

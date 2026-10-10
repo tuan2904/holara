@@ -191,10 +191,10 @@ const SpecialtyFormPage = () => {
             </div>
             {/* Parent */}
             <div>
-              <label className="mb-1.5 block text-sm font-semibold text-text-main">Parent Specialty</label>
+              <label className="mb-1.5 block text-sm font-semibold text-text-main">{t("specialty.parentSpecialty")}</label>
               <select name="parent_id" value={formData.parent_id} onChange={handleChange}
                 className="w-full appearance-none rounded-xl border border-border-main bg-bg-app px-4 py-2.5 text-sm text-text-main outline-none transition focus:ring-2 focus:ring-teal-500/40 dark:bg-slate-900">
-                <option value="">None (Root specialty)</option>
+                <option value="">{t("specialty.noneRoot")}</option>
                 {allSpecialties
                   .filter((item) => !isEditMode || String(item.id) !== String(specialtyId))
                   .map((item) => (

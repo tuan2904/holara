@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18n from "../../i18n/config";
 import {
   AlertCircle, CheckCircle2, Pencil, Plus, RefreshCw,
   Search, Stethoscope, Trash2, UserRound, Users, X,
@@ -44,7 +45,7 @@ const SkeletonCard = ({ i }) => (
 const StatusBadge = ({ status, t }) => {
   const label = status === "active" ? t("admin.statusActive")
     : status === "inactive" ? t("admin.statusInactive")
-    : status === "on_leave" ? "On leave"
+    : status === "on_leave" ? t("admin.statusOnLeave")
     : status;
   return (
     <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[status] || "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"}`}>
@@ -72,7 +73,7 @@ const DoctorsPage = () => {
       const res = await getAllDoctorsApi();
       setDoctors((res.data || []).filter((d) => d.status !== "deleted"));
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch doctors");
+      setError(err.response?.data?.message || i18n.t("errors.fetchDoctors"));
     } finally { setLoading(false); }
   };
 
@@ -93,7 +94,7 @@ const DoctorsPage = () => {
       setSuccess(t("admin.deleteDoctorSuccess") || "Doctor deleted successfully");
       setShowDeleteConfirm(null);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete doctor");
+      setError(err.response?.data?.message || t("errors.deleteDoctor"));
       setShowDeleteConfirm(null);
     }
   };

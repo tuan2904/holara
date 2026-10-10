@@ -55,7 +55,7 @@ const ReviewFormModal = ({ isOpen, onClose, onSubmit, doctorName, initialData = 
               {initialData ? t("review.form.editTitle", { defaultValue: "Edit Review" }) : t("review.form.title", { defaultValue: "Rate Your Doctor" })}
             </h3>
             {doctorName && (
-              <p className="mt-1 text-sm text-text-dim">Dr. {doctorName}</p>
+              <p className="mt-1 text-sm text-text-dim">{t("common.drPrefix")} {doctorName}</p>
             )}
           </div>
           <button onClick={onClose} className="rounded-xl p-2 text-text-dim transition hover:bg-bg-app hover:text-text-main dark:hover:bg-slate-700">

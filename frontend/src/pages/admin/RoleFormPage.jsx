@@ -168,7 +168,7 @@ const RoleFormPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="e.g., Administrator, Editor"
+                placeholder={t("admin.roleNamePlaceholder")}
                 className="w-full px-4 py-2.5 border border-border-main bg-bg-app rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E06666]/30 focus:border-transparent transition dark:bg-slate-700"
               />
             </div>
@@ -182,7 +182,7 @@ const RoleFormPage = () => {
                 name="code"
                 value={formData.code}
                 onChange={handleInputChange}
-                placeholder="e.g., admin, editor"
+                placeholder={t("admin.roleCodePlaceholder")}
                 disabled={isEdit}
                 className="w-full px-4 py-2.5 border border-border-main bg-bg-app rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E06666]/30 focus:border-transparent transition disabled:bg-bg-app disabled:cursor-not-allowed dark:bg-slate-700"
               />

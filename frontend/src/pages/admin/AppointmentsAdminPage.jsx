@@ -382,7 +382,7 @@ const AppointmentsAdminPage = () => {
                   <td className="px-4 py-3">
                     <p className="max-w-[180px] truncate text-sm text-text-dim" title={app.reason}>{app.reason || "—"}</p>
                     <span className="mt-1 inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
-                      {app.appointment_type}
+                      {t(`enums.appointmentType.${app.appointment_type}`, { defaultValue: app.appointment_type })}
                     </span>
                   </td>
                   {/* Status */}
@@ -441,7 +441,7 @@ const AppointmentsAdminPage = () => {
               )}
               {app.reason && <p className="truncate text-xs text-text-dim">{app.reason}</p>}
               <span className="inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
-                {app.appointment_type}
+                {t(`enums.appointmentType.${app.appointment_type}`, { defaultValue: app.appointment_type })}
               </span>
             </div>
 

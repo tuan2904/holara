@@ -67,13 +67,13 @@ const formatDate = (dateStr) => {
 };
 
 const parseBrowser = (ua) => {
-  if (!ua) return "Unknown";
+  if (!ua) return null;
   if (ua.includes("Edg/")) return "Edge";
   if (ua.includes("Chrome/")) return "Chrome";
   if (ua.includes("Firefox/")) return "Firefox";
   if (ua.includes("Safari/") && !ua.includes("Chrome")) return "Safari";
   if (ua.includes("Opera") || ua.includes("OPR/")) return "Opera";
-  return "Other";
+  return "other";
 };
 
 const AuditLogsPage = () => {
@@ -363,7 +363,7 @@ const AuditLogsPage = () => {
                           </div>
                           <div className="min-w-0">
                             <div className="truncate text-text-main font-medium text-xs">
-                              {log.user_name || "System"}
+                              {log.user_name || t("audit.system")}
                             </div>
                             <div className="truncate text-text-dim text-xs">
                               {log.user_email || "—"}
@@ -426,11 +426,11 @@ const AuditLogsPage = () => {
                                 <span className="text-text-dim">
                                   {t("audit.browser", { defaultValue: "Browser" })}:
                                 </span>
-                                <span className="text-text-main">{parseBrowser(log.user_agent)}</span>
+                                <span className="text-text-main">{(() => { const b = parseBrowser(log.user_agent); return b === null ? t("audit.browserUnknown") : b === "other" ? t("audit.browserOther") : b; })()}</span>
                               </div>
                               <div className="flex items-center gap-1.5">
                                 <Globe className="h-3.5 w-3.5 text-text-dim" />
-                                <span className="text-text-dim">IP:</span>
+                                <span className="text-text-dim">{t("audit.ip")}:</span>
                                 <span className="text-text-main">{log.ip_address || "—"}</span>
                               </div>
                               {log.user_agent && (

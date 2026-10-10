@@ -55,7 +55,7 @@ const RoleDetailPage = () => {
       const assignedIds = rolePermResponse.data.filter((p) => p.is_assigned).map((p) => p.id);
       setSelectedPermissions(assignedIds);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch data");
+      setError(err.response?.data?.message || t("errors.fetchData"));
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ const RoleDetailPage = () => {
       setSuccess(t("admin.updateRolePermissionsSuccess"));
       setTimeout(() => { fetchData(); }, 1500);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save permissions");
+      setError(err.response?.data?.message || t("errors.savePermissions"));
     } finally {
       setSaving(false);
     }
@@ -111,7 +111,7 @@ const RoleDetailPage = () => {
   });
 
   const groupedPermissions = filteredPermissions.reduce((acc, perm) => {
-    const mod = perm.module_name || "General";
+    const mod = perm.module_name || t("admin.moduleGeneral");
     if (!acc[mod]) acc[mod] = [];
     acc[mod].push(perm);
     return acc;
@@ -361,7 +361,7 @@ const RoleDetailPage = () => {
                             ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
                             : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400"
                         }`}>
-                          {perm.status === "active" ? "Active" : "Off"}
+                          {perm.status === "active" ? t("admin.statusActive") : t("admin.statusOff")}
                         </span>
                       </label>
                     ))}

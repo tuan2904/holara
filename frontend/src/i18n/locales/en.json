@@ -74,7 +74,19 @@
     "to": "To",
     "date": "Date",
     "note": "Note",
-    "minutes": "min"
+    "minutes": "min",
+    "homepage": "Homepage",
+    "drPrefix": "Dr.",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode",
+    "nextPage": "Next",
+    "placeholderFullName": "John Doe",
+    "placeholderDoctorName": "Dr. John Doe",
+    "placeholderQualification": "MD, Bachelor of Medicine",
+    "placeholderAddress": "123 Main Street",
+    "placeholderEmergencyName": "John Smith",
+    "selectGender": "Select Gender",
+    "selectBloodGroup": "Select Blood Group"
   },
   "navbar": {
     "holora": "MeDecode",
@@ -139,7 +151,22 @@
     "change_password_success": "Password changed successfully!",
     "change_password_failed": "Failed to change password. Please check your current password.",
     "passwords_do_not_match": "Confirm password does not match.",
-    "password_too_short": "New password must be at least 6 characters."
+    "password_too_short": "New password must be at least 6 characters.",
+    "inviteSetup": {
+      "missingToken": "Missing invite token.",
+      "passwordMin": "Password must be at least 6 characters.",
+      "passwordMismatch": "Password confirmation does not match.",
+      "success": "Account setup completed. Please login.",
+      "failed": "Failed to complete account setup.",
+      "title": "Doctor Account Setup",
+      "subtitle": "Set your password for first-time login",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Minimum 6 characters",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "submitting": "Setting up...",
+      "submit": "Complete Setup"
+    }
   },
   "prescription": {
     "sectionTitle": "Prescription",
@@ -519,7 +546,9 @@
       "actions": "Actions",
       "approve": "Approve",
       "reject": "Reject",
-      "hide": "Hide"
+      "hide": "Hide",
+      "statusLabel": "Status:",
+      "ratingLabel": "Rating:"
     },
     "errorFetchingAppointments": "Failed to load appointments",
     "appointmentStatusUpdated": "Appointment status updated",
@@ -617,7 +646,25 @@
     "searchDoctors": "Search name, specialty, branch...",
     "confirmDeleteDoctorText": "This action cannot be undone.",
     "allGenders": "All genders",
-    "roleSuperAdmin": "Super Admin"
+    "roleSuperAdmin": "Super Admin",
+    "status_pending": "Pending",
+    "status_in_progress": "In progress",
+    "status_completed": "Completed",
+    "status_cancelled": "Cancelled",
+    "brandTitle": "MeDecode Admin",
+    "statusCheckedIn": "Checked in",
+    "statusCancelled": "Cancelled",
+    "statusNoShow": "No show",
+    "moduleGeneral": "General",
+    "statusOff": "Off",
+    "statusOnLeave": "On leave",
+    "permissionNamePlaceholder": "e.g., Create User, Edit Role",
+    "permissionCodePlaceholder": "e.g., create_user, edit_role",
+    "permissionModulePlaceholder": "e.g., users, roles, permissions",
+    "roleNamePlaceholder": "e.g., Administrator, Editor",
+    "roleCodePlaceholder": "e.g., admin, editor",
+    "statusBlocked": "Blocked",
+    "slotMinutes": "{{count}}m slots"
   },
   "specialty": {
     "managementTitle": "Specialty Management",
@@ -650,7 +697,18 @@
     "confirmDelete": "Are you sure you want to delete this specialty?",
     "updateError": "Failed to update specialty",
     "totalSpecialties": "Total specialties",
-    "dropToRoot": "Drop here to move specialty to root level"
+    "dropToRoot": "Drop here to move specialty to root level",
+    "selectTransferTarget": "Please select a target specialty to transfer doctors",
+    "transferDeleteSuccess": "Doctors were transferred and specialty deleted successfully",
+    "hierarchyUpdated": "Hierarchy updated successfully",
+    "cannotMoveUnderChild": "Cannot move a parent under its own child",
+    "parent": "Parent",
+    "hasDoctors": "This specialty has {{count}} doctor(s).",
+    "moveDoctorsFirst": "Please move doctors to another leaf specialty before deleting.",
+    "suggestedTarget": "Suggested target leaf specialty",
+    "transferAndDelete": "Transfer & Delete",
+    "parentSpecialty": "Parent Specialty",
+    "noneRoot": "None (Root specialty)"
   },
   "patient": {
     "zone": "My Zone",
@@ -918,6 +976,17 @@
       "noConsultations": "No consultations yet",
       "unassigned": "Unassigned",
       "completion": "Completion"
+    },
+    "branchDetail": {
+      "loadError": "Could not load branch details. Please try again.",
+      "backToList": "Back to list",
+      "notFound": "Branch not found.",
+      "badge": "Branch Detail",
+      "defaultName": "Branch",
+      "addressUpdating": "Address is being updated",
+      "area": "Area: {{city}}",
+      "book": "Book an appointment",
+      "otherBranches": "View other branches"
     }
   },
   "doctor": {
@@ -1339,7 +1408,8 @@
       "viewTable": "Table",
       "activeFilters": "Active:",
       "showing": "Showing {{count}} of {{total}}",
-      "apptUnit": "appointment(s)"
+      "apptUnit": "appointment(s)",
+      "recurring": "Recurring"
     },
     "dashboardHome": {
       "appointmentsDesc": "{{count}} today",
@@ -1436,7 +1506,17 @@
     "404": "Page not found",
     "500": "Server error",
     "unauthorized": "Unauthorized access",
-    "forbidden": "Forbidden"
+    "forbidden": "Forbidden",
+    "fetchPermissions": "Failed to fetch permissions",
+    "savePermissions": "Failed to save permissions",
+    "fetchData": "Failed to fetch data",
+    "fetchRoles": "Failed to fetch roles",
+    "deleteRole": "Failed to delete role",
+    "deletePermission": "Failed to delete permission",
+    "loadPatients": "Failed to load patients",
+    "deletePatient": "Failed to delete patient",
+    "fetchDoctors": "Failed to fetch doctors",
+    "deleteDoctor": "Failed to delete doctor"
   },
   "clinicOwner": {
     "portal": "Provider Portal",
@@ -1495,7 +1575,8 @@
     "subscription": "Subscription",
     "noBranches": "No branches yet",
     "noBranchesHint": "Create your first branch to start managing doctors.",
-    "totalPatients": "Total"
+    "totalPatients": "Total",
+    "providerFallback": "Provider"
   },
   "publicDoctors": {
     "shared": {
@@ -1688,7 +1769,25 @@
     "greeting": "Hello, I'm MeDecode AI",
     "description": "I can help you analyze symptoms, look up medications, or prepare for your upcoming appointment.",
     "thinking": "MeDecode AI is thinking...",
-    "placeholder": "Ask anything..."
+    "placeholder": "Ask anything...",
+    "sidebar": {
+      "agents": "Agents",
+      "search": "Search",
+      "library": "Library"
+    },
+    "workspace": "WORKSPACE",
+    "history": "HISTORY",
+    "aiNativeAssistant": "AI-Native Assistant",
+    "suggestion": {
+      "prep": "I want to prepare for my upcoming appointment.",
+      "symptoms": "I have some symptoms and need initial guidance.",
+      "medication": "Can you explain my medication and possible side effects?",
+      "wellness": "Give me general wellness and prevention tips.",
+      "differential": "Help me build a differential diagnosis for these symptoms.",
+      "protocol": "What is the latest treatment protocol for Type 2 Diabetes?",
+      "imaging": "Analyze this lab result pattern and suggest next steps.",
+      "workflow": "Suggest ways to optimize my clinic workflow."
+    }
   },
   "audit": {
     "action": "Action",
@@ -1703,7 +1802,10 @@
     "ip": "IP",
     "noResults": "No audit logs found.",
     "details": "Details",
-    "browser": "Browser"
+    "browser": "Browser",
+    "system": "System",
+    "browserUnknown": "Unknown",
+    "browserOther": "Other"
   },
   "version": {
     "currentVersion": "Current Version",
@@ -1841,7 +1943,22 @@
     "date": "Date",
     "confirmDowngradeTitle": "Downgrade to MeDecode Free?",
     "confirmDowngradeDesc": "The limit of 3 branches and 3 doctors per branch will apply immediately after switching.",
-    "confirmDowngrade": "Confirm downgrade"
+    "confirmDowngrade": "Confirm downgrade",
+    "free_forever": "Free forever",
+    "unlimited_power": "Unlimited power",
+    "statusValue": {
+      "active": "active",
+      "inactive": "inactive",
+      "expired": "expired",
+      "cancelled": "cancelled",
+      "pending": "pending",
+      "trial": "trial",
+      "paid": "paid",
+      "failed": "failed",
+      "none": "none"
+    },
+    "noActivePlan": "No active plan yet",
+    "bankTransfer": "Bank Transfer"
   },
   "breadcrumb": {
     "home": "Home",
@@ -1875,5 +1992,177 @@
     "room": "Room",
     "version": "Version",
     "auditLogs": "Audit Logs"
+  },
+  "accountantDashboard": {
+    "invoices": "Invoices",
+    "invoicesDesc": "Manage invoices",
+    "payments": "Payments",
+    "paymentsDesc": "Payment processing",
+    "revenueReports": "Revenue Reports",
+    "revenueReportsDesc": "Financial analytics",
+    "salary": "Salary Management",
+    "salaryDesc": "Staff payments",
+    "welcome": "Welcome, {{name}}!",
+    "subtitle": "Financial overview and accounting management dashboard.",
+    "totalRevenue": "Total Revenue",
+    "totalExpenses": "Total Expenses",
+    "netIncome": "Net Income",
+    "pendingPayments": "Pending Payments",
+    "quickAccess": "Quick Access",
+    "recentTransactions": "Recent Transactions",
+    "sampleInvoice": "Invoice {{code}}",
+    "sampleToday": "Today, {{time}}",
+    "samplePayroll": "Payroll Payment",
+    "sampleYesterday": "Yesterday",
+    "sampleSupplies": "Supplies Purchase",
+    "sampleDaysAgo": "{{count}} days ago"
+  },
+  "receptionistDashboard": {
+    "manageAppointments": "Manage Appointments",
+    "todayCount": "{{count}} today",
+    "patientCheckIn": "Patient Check-In",
+    "checkedInCount": "{{count}} checked in",
+    "patientList": "Patient List",
+    "todayPatients": "Today's patients",
+    "callLog": "Call Log",
+    "callsCount": "{{count}} calls",
+    "welcome": "Welcome, {{name}}!",
+    "subtitle": "Today's reception overview and quick access to key tasks.",
+    "todayAppointments": "Today's Appointments",
+    "checkedIn": "Checked In",
+    "pendingAppointments": "Pending Appointments",
+    "totalCalls": "Total Calls",
+    "quickAccess": "Quick Access",
+    "upcomingAppointments": "Upcoming Appointments",
+    "samplePatient": "Patient Name",
+    "sampleDoctor": "Doctor Name",
+    "checkIn": "Check In"
+  },
+  "enums": {
+    "status": {
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "checked_in": "Checked in",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "no_show": "No show",
+      "pending": "Pending",
+      "active": "Active",
+      "inactive": "Inactive",
+      "blocked": "Blocked",
+      "on_leave": "On leave",
+      "suspended": "Suspended",
+      "deleted": "Deleted",
+      "draft": "Draft",
+      "issued": "Issued",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "hidden": "Hidden",
+      "paid": "Paid",
+      "failed": "Failed",
+      "expired": "Expired",
+      "queued": "Queued",
+      "processing": "Processing",
+      "trialing": "Trialing",
+      "past_due": "Past due",
+      "live": "Live",
+      "ended": "Ended",
+      "revoked": "Revoked"
+    },
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "appointmentType": {
+      "online": "Online",
+      "offline": "In-person",
+      "office": "In-person",
+      "video": "Video"
+    },
+    "role": {
+      "patient": "Patient",
+      "doctor": "Doctor",
+      "clinic_owner": "Clinic Owner",
+      "admin": "Admin",
+      "super_admin": "Master Admin",
+      "receptionist": "Receptionist",
+      "accountant": "Accountant"
+    }
+  },
+  "doctorForm": {
+    "errNoSubscription": "Selected branch does not have an active subscription yet. Create the branch again or activate a plan first.",
+    "errSubscriptionInactive": "Selected branch subscription is inactive. Please activate or renew the branch plan first.",
+    "errDoctorLimit": "Selected branch has reached its doctor limit for the current subscription.",
+    "errEmailInvite": "Doctor email is required for invite mode",
+    "errEmailLogin": "Doctor email is required when creating a login account",
+    "invitedSuccess": "Doctor invited successfully. Share this setup link with the doctor.",
+    "err402NoSubscription": "Selected branch does not have an active doctor subscription. Open Subscription to activate a plan or create a new branch trial.",
+    "err402DoctorLimit": "Selected branch has reached the doctor limit for its current plan. Upgrade the branch subscription or choose another branch.",
+    "ownerSubtitle": "Create a doctor profile with branch-aware subscription checks.",
+    "branchesSelected": "{{count}} branch(es) selected",
+    "noBranchSelected": "No branch selected yet",
+    "inviteAccess": "Invite-based access",
+    "instantLogin": "Create login instantly",
+    "statusLabel": "Status: {{status}}",
+    "codeFixed": "Doctor code is fixed after creation.",
+    "codeReserved": "Reserved automatically when this form opens.",
+    "basicDesc": "Core identity, specialty, and access settings.",
+    "branchSection": "Branch assignment and account access",
+    "branchSectionDesc": "Pick the working branches first, then decide how this doctor will sign in.",
+    "manualTitle": "Create login now",
+    "manualDesc": "Add username and password immediately so the doctor can sign in right away.",
+    "inviteTitle": "Invite by email",
+    "inviteDesc": "Generate a one-time setup link and send the onboarding handoff later.",
+    "selectedCount": "{{count}} selected",
+    "selectAtLeastOne": "Select at least one branch",
+    "noBranchCode": "No branch code",
+    "currentDoctors": "Current doctors: {{count}}",
+    "inviteNotice": "A one-time setup link will be generated and shown after saving this doctor.",
+    "professionalDesc": "Add clinical profile details and consultation settings.",
+    "snapshot": "Doctor snapshot",
+    "primaryBranch": "Primary branch",
+    "waitingBranch": "Waiting for branch selection",
+    "specialty": "Specialty",
+    "notSelected": "Not selected yet",
+    "branchCoverage": "Branch coverage",
+    "noBranches": "No branches selected",
+    "guardrail": "Subscription guardrail",
+    "guardrailDesc": "The first selected branch is used to validate subscription and doctor limits.",
+    "noActiveSubscription": "No active subscription found",
+    "doctorsUsed": "Doctors used: {{used}}/{{limit}}",
+    "unlimited": "Doctor limit: Unlimited",
+    "warnNoSubscription": "This branch has no active subscription record yet.",
+    "warnInactive": "The selected branch subscription is inactive.",
+    "warnLimit": "This branch has reached the doctor limit of its current plan.",
+    "actions": "Actions",
+    "actionsDesc": "Review the doctor profile, then save when everything looks correct."
+  },
+  "patientForm": {
+    "step1Desc": "Identity, contact details, and branch access.",
+    "step2Desc": "Medical profile and patient status.",
+    "step3Desc": "Emergency contact and final review.",
+    "subtitle": "A guided 3-step flow so the operator only sees the information needed at each moment.",
+    "stepOf": "Step {{current}} / {{total}}",
+    "branchCount": "{{count}} branch(es)",
+    "noBranchYet": "No branch yet",
+    "codeFixed": "Patient code stays fixed after creation.",
+    "basicDesc": "Focus only on the essential contact details first.",
+    "medicalDesc": "Capture medical context after the basic patient shell is ready.",
+    "emergencyDesc": "Final safety contact details and a quick review before saving.",
+    "finalReview": "Final review",
+    "reviewPatient": "Patient",
+    "reviewBranches": "Branches",
+    "reviewMedical": "Medical",
+    "noBloodGroup": "No blood group set",
+    "reviewEmergency": "Emergency",
+    "noEmergency": "No emergency contact yet",
+    "whyTitle": "Why this flow",
+    "whyDesc": "The form is split into smaller decisions so operators can finish the critical patient shell first, then enrich medical and emergency details without overload.",
+    "progress": "Current progress",
+    "step": "Step",
+    "selectedBranches": "Selected branches",
+    "notSet": "Not set yet"
   }
 }

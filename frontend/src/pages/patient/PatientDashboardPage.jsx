@@ -118,7 +118,7 @@ const PatientDashboardPage = () => {
                   </p>
                   <Link to="/" className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-white/20 transition">
                     <Home className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Homepage</span>
+                    <span className="hidden sm:inline">{t("common.homepage")}</span>
                   </Link>
                 </div>
                 <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
@@ -180,7 +180,7 @@ const PatientDashboardPage = () => {
                 {fmtDate(nextAppt.appointment_date)} &middot; {fmtTime(nextAppt.start_time)} – {fmtTime(nextAppt.end_time)}
               </p>
               <p className="text-xs text-text-dim">
-                {nextAppt.doctor_name && `Dr. ${nextAppt.doctor_name}`}
+                {nextAppt.doctor_name && `${t("common.drPrefix")} ${nextAppt.doctor_name}`}
                 {nextAppt.specialty_name && ` · ${nextAppt.specialty_name}`}
                 {nextAppt.branch_name && ` · ${nextAppt.branch_name}`}
               </p>
@@ -240,14 +240,14 @@ const PatientDashboardPage = () => {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-text-main">
-                    {a.appointment_code} &middot; {a.doctor_name && `Dr. ${a.doctor_name}`}
+                    {a.appointment_code} &middot; {a.doctor_name && `${t("common.drPrefix")} ${a.doctor_name}`}
                   </p>
                   <p className="text-xs text-text-dim">
                     {fmtDate(a.appointment_date)} &middot; {fmtTime(a.start_time)}
                   </p>
                 </div>
                 <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold ${STATUS_CLS[a.status] || "bg-slate-100 text-slate-600"}`}>
-                  {a.status}
+                  {t(`enums.status.${a.status}`, { defaultValue: a.status })}
                 </span>
               </Link>
             ))}
@@ -281,11 +281,11 @@ const PatientDashboardPage = () => {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-text-main">{c.chief_complaint || "—"}</p>
                   <p className="text-xs text-text-dim">
-                    {c.doctor_name ? `Dr. ${c.doctor_name}` : t("patient.dashboardHome.unassigned", { defaultValue: "Unassigned" })}
+                    {c.doctor_name ? `${t("common.drPrefix")} ${c.doctor_name}` : t("patient.dashboardHome.unassigned", { defaultValue: "Unassigned" })}
                   </p>
                 </div>
                 <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold ${STATUS_CLS[c.status] || "bg-slate-100 text-slate-600"}`}>
-                  {c.status}
+                  {t(`enums.status.${c.status}`, { defaultValue: c.status })}
                 </span>
               </Link>
             ))}

@@ -436,7 +436,7 @@ const DoctorProfilePage = () => {
               </div>
 
               <div className="mt-6 grid gap-5 md:grid-cols-2">
-                {renderField({ label: t("admin.fullName"), icon: User, name: "full_name", value: profileData.full_name, placeholder: "Nguyen Van A" })}
+                {renderField({ label: t("admin.fullName"), icon: User, name: "full_name", value: profileData.full_name, placeholder: t("common.placeholderFullName") })}
                 {renderField({ label: t("admin.phone"), icon: Phone, name: "phone", value: profileData.phone, placeholder: "+84 ..." })}
                 {renderField({ label: t("admin.email"), icon: Mail, name: "email", value: profileData.email, type: "email", placeholder: "doctor@example.com" })}
                 {renderField({ label: t("doctor.profilePage.avatarUrl"), icon: MapPin, name: "avatar_url", value: profileData.avatar_url, placeholder: "https://..." })}
@@ -454,7 +454,7 @@ const DoctorProfilePage = () => {
 
               <div className="mt-6 grid gap-5 md:grid-cols-2">
                 {renderField({ label: t("doctor.profilePage.licenseNumber"), icon: ClipboardList, name: "license_number", value: profileData.license_number, placeholder: "LIC-..." })}
-                {renderField({ label: t("doctor.profilePage.qualification"), icon: GraduationCap, name: "qualification", value: profileData.qualification, placeholder: "MBBS, DDS..." })}
+                {renderField({ label: t("doctor.profilePage.qualification"), icon: GraduationCap, name: "qualification", value: profileData.qualification, placeholder: t("common.placeholderQualification") })}
                 {renderField({ label: t("doctor.profilePage.experienceYears"), icon: Stethoscope, name: "experience_years", value: profileData.experience_years, type: "number", placeholder: "0" })}
                 {renderField({ label: t("doctor.profilePage.consultationFee"), icon: Wallet, name: "consultation_fee", value: profileData.consultation_fee, type: "number", placeholder: "0", formatter: (value) => formatCurrency(value, i18n.language) })}
                 <div className="md:col-span-2">

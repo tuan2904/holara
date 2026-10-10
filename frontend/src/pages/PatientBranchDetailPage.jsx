@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Building2, Mail, MapPin, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import branchService from "../services/branchService";
 
 const unwrap = (payload) => payload?.data || payload;
 
 const PatientBranchDetailPage = () => {
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const [branch, setBranch] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,14 +23,14 @@ const PatientBranchDetailPage = () => {
         setBranch(unwrap(response));
       } catch (err) {
         console.error("Failed to load branch detail", err);
-        setError("Khong the tai chi tiet chi nhanh. Vui long thu lai.");
+        setError(t("patient.branchDetail.loadError"));
       } finally {
         setIsLoading(false);
       }
     };
 
     loadDetail();
-  }, [id]);
+  }, [id, t]);
 
   return (
     <div className="relative min-h-[calc(100vh-140px)] overflow-hidden bg-[#F7F9FC] text-gray-900 dark:bg-[#0F141F] dark:text-slate-100">
@@ -42,7 +44,7 @@ const PatientBranchDetailPage = () => {
           className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:border-[#E06666]/35 hover:text-[#B64949] dark:border-slate-700 dark:bg-[#141B29] dark:text-slate-200"
         >
           <ArrowLeft size={16} />
-          Quay lai danh sach
+          {t("patient.branchDetail.backToList")}
         </Link>
 
         {isLoading ? (
@@ -58,27 +60,27 @@ const PatientBranchDetailPage = () => {
           </div>
         ) : !branch ? (
           <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 text-sm text-gray-600 dark:border-slate-700 dark:bg-[#141B29] dark:text-slate-300">
-            Khong tim thay chi nhanh.
+            {t("patient.branchDetail.notFound")}
           </div>
         ) : (
           <article className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-[#141B29]">
             <p className="inline-flex items-center gap-1 rounded-full bg-[#FFF2F2] px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#BC4D4D] dark:bg-[#2B1F28] dark:text-[#F3A3A3]">
               <Building2 size={13} />
-              Branch Detail
+              {t("patient.branchDetail.badge")}
             </p>
 
-            <h1 className="mt-4 text-2xl font-semibold sm:text-3xl">{branch.name || "Chi nhanh"}</h1>
+            <h1 className="mt-4 text-2xl font-semibold sm:text-3xl">{branch.name || t("patient.branchDetail.defaultName")}</h1>
 
             <div className="mt-6 space-y-3 text-sm text-gray-700 dark:text-slate-300">
               <p className="flex items-start gap-2">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-[#B64949]" />
-                <span>{branch.address || "Dang cap nhat dia chi"}</span>
+                <span>{branch.address || t("patient.branchDetail.addressUpdating")}</span>
               </p>
 
               {branch.city && (
                 <p className="flex items-start gap-2">
                   <MapPin size={16} className="mt-0.5 shrink-0 text-[#2B6298]" />
-                  <span>Khu vuc: {branch.city}</span>
+                  <span>{t("patient.branchDetail.area", { city: branch.city })}</span>
                 </p>
               )}
 
@@ -108,13 +110,13 @@ const PatientBranchDetailPage = () => {
                 to={`/patient/appointments?branchId=${id}`}
                 className="inline-flex items-center rounded-xl bg-[#E06666] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#D55555]"
               >
-                Dat lich kham
+                {t("patient.branchDetail.book")}
               </Link>
               <Link
                 to="/branches"
                 className="inline-flex items-center rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:border-[#E06666]/35 hover:text-[#B64949] dark:border-slate-700 dark:bg-[#141B29] dark:text-slate-200"
               >
-                Xem branch khac
+                {t("patient.branchDetail.otherBranches")}
               </Link>
             </div>
           </article>

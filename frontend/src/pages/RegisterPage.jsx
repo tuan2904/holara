@@ -155,7 +155,9 @@ const RegisterPage = ({ defaultAccountType = "patient" }) => {
         <div className="grid w-full max-w-6xl gap-8 lg:grid-cols-[1fr_560px] lg:gap-12">
           <div className="hidden lg:flex lg:flex-col lg:justify-center">
             <p className="inline-flex w-fit items-center rounded-full border border-[#E06666]/25 bg-[#FFF5F5] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#C14D4D] dark:border-[#E06666]/35 dark:bg-[#2B1F28] dark:text-[#F3A3A3]">
-              {isProviderRegister ? "Provider onboarding" : "Patient onboarding"}
+              {isProviderRegister
+                ? isVi ? "Đăng ký đối tác y tế" : "Provider onboarding"
+                : isVi ? "Đăng ký bệnh nhân" : "Patient onboarding"}
             </p>
             <h1 className="mt-6 max-w-lg text-5xl font-semibold tracking-tight text-gray-900 dark:text-slate-100">
               {isProviderRegister
@@ -189,15 +191,17 @@ const RegisterPage = ({ defaultAccountType = "patient" }) => {
           <div className="rounded-[28px] border border-gray-200 bg-white p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:border-slate-700 dark:bg-[#141B29] dark:shadow-[0_24px_60px_rgba(0,0,0,0.28)] sm:p-8">
             <div className="mb-8">
               <p className="inline-flex items-center rounded-full border border-[#E06666]/20 bg-[#FFF5F5] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#C14D4D] dark:border-[#E06666]/30 dark:bg-[#2B1F28] dark:text-[#F3A3A3]">
-                {isProviderRegister ? "Provider account" : "Patient account"}
+                {isProviderRegister
+                  ? isVi ? "Tài khoản đối tác y tế" : "Provider account"
+                  : isVi ? "Tài khoản bệnh nhân" : "Patient account"}
               </p>
               <h2 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900 dark:text-slate-100">
-                {isProviderRegister ? "Create Provider Account" : t("auth.createAccount")}
+                {isProviderRegister ? (isVi ? "Tạo tài khoản đối tác y tế" : "Create Provider Account") : t("auth.createAccount")}
               </h2>
               <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-slate-400">
                 {isProviderRegister
                   ? isVi
-                    ? "Hoàn tất thông tin cơ bản để khởi tạo tài khoản provider."
+                    ? "Hoàn tất thông tin cơ bản để khởi tạo tài khoản đối tác y tế."
                     : "Complete the basic information to initialize your provider account."
                   : isVi
                   ? "Tạo tài khoản mới để bắt đầu dùng MeDecode."
@@ -348,7 +352,9 @@ const RegisterPage = ({ defaultAccountType = "patient" }) => {
               <div className="flex justify-center overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 px-3 py-3 dark:border-slate-700 dark:bg-[#0F141F]">
                 {isProviderRegister ? (
                   <p className="text-center text-xs leading-6 text-gray-500 dark:text-slate-400">
-                    Google signup currently creates patient accounts only.
+                    {isVi
+                      ? "Đăng ký bằng Google hiện chỉ tạo tài khoản bệnh nhân."
+                      : "Google signup currently creates patient accounts only."}
                   </p>
                 ) : (
                   <div ref={googleBtnRef} />
