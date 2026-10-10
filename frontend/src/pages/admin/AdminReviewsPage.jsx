@@ -83,14 +83,14 @@ const AdminReviewsPage = () => {
         <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl" />
         <div className="relative">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-            {t("admin.reviews.subtitle", { defaultValue: "Moderation" })}
+            {t("admin.reviewsPage.subtitle", { defaultValue: "Moderation" })}
           </p>
           <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-            {t("admin.reviews.title", { defaultValue: "Review Management" })}
+            {t("admin.reviewsPage.title", { defaultValue: "Review Management" })}
           </h1>
           {pagination && (
             <p className="mt-2 text-sm text-slate-400">
-              {pagination.total} {t("admin.reviews.totalReviews", { defaultValue: "total reviews" })}
+              {pagination.total} {t("admin.reviewsPage.totalReviews", { defaultValue: "total reviews" })}
             </p>
           )}
         </div>
@@ -152,7 +152,7 @@ const AdminReviewsPage = () => {
         <div className="flex flex-col items-center justify-center rounded-2xl border border-border-main bg-bg-surface py-16 dark:bg-slate-800">
           <MessageSquare className="h-12 w-12 text-text-dim opacity-30" />
           <p className="mt-3 text-sm font-medium text-text-dim">
-            {t("admin.reviews.noReviews", { defaultValue: "No reviews found" })}
+            {t("admin.reviewsPage.noReviews", { defaultValue: "No reviews found" })}
           </p>
         </div>
       ) : (
@@ -161,13 +161,13 @@ const AdminReviewsPage = () => {
             <thead>
               <tr className="border-b border-border-main bg-bg-app/50 dark:bg-slate-700/30">
                 <th className="px-4 py-3 font-semibold text-text-dim">ID</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.patient", { defaultValue: "Patient" })}</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.doctor", { defaultValue: "Doctor" })}</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.rating", { defaultValue: "Rating" })}</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.content", { defaultValue: "Content" })}</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.status", { defaultValue: "Status" })}</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.date", { defaultValue: "Date" })}</th>
-                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviews.actions", { defaultValue: "Actions" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.patient", { defaultValue: "Patient" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.doctor", { defaultValue: "Doctor" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.rating", { defaultValue: "Rating" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.content", { defaultValue: "Content" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.status", { defaultValue: "Status" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.date", { defaultValue: "Date" })}</th>
+                <th className="px-4 py-3 font-semibold text-text-dim">{t("admin.reviewsPage.actions", { defaultValue: "Actions" })}</th>
               </tr>
             </thead>
             <tbody>
@@ -200,7 +200,7 @@ const AdminReviewsPage = () => {
                         <button
                           onClick={() => handleModerate(review.id, "approved")}
                           disabled={moderating === review.id}
-                          title={t("admin.reviews.approve", { defaultValue: "Approve" })}
+                          title={t("admin.reviewsPage.approve", { defaultValue: "Approve" })}
                           className="rounded-lg bg-emerald-100 p-1.5 text-emerald-700 transition hover:bg-emerald-200 disabled:opacity-50 dark:bg-emerald-900/30 dark:text-emerald-300"
                         >
                           <Check className="h-4 w-4" />
@@ -210,7 +210,7 @@ const AdminReviewsPage = () => {
                         <button
                           onClick={() => handleModerate(review.id, "rejected")}
                           disabled={moderating === review.id}
-                          title={t("admin.reviews.reject", { defaultValue: "Reject" })}
+                          title={t("admin.reviewsPage.reject", { defaultValue: "Reject" })}
                           className="rounded-lg bg-red-100 p-1.5 text-red-700 transition hover:bg-red-200 disabled:opacity-50 dark:bg-red-900/30 dark:text-red-300"
                         >
                           <X className="h-4 w-4" />
@@ -220,7 +220,7 @@ const AdminReviewsPage = () => {
                         <button
                           onClick={() => handleModerate(review.id, "hidden")}
                           disabled={moderating === review.id}
-                          title={t("admin.reviews.hide", { defaultValue: "Hide" })}
+                          title={t("admin.reviewsPage.hide", { defaultValue: "Hide" })}
                           className="rounded-lg bg-slate-100 p-1.5 text-slate-600 transition hover:bg-slate-200 disabled:opacity-50 dark:bg-slate-700 dark:text-slate-300"
                         >
                           <EyeOff className="h-4 w-4" />

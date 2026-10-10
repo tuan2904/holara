@@ -455,7 +455,7 @@ const DoctorConsultationDetailPage = () => {
 
     if (acceptedFiles.length < files.length) {
       setReplyError(t("doctor.consultationDetail.replyImageLimit", {
-        defaultValue: `Chỉ được gửi tối đa ${MAX_REPLY_ATTACHMENTS} ảnh.`,
+        max: MAX_REPLY_ATTACHMENTS,
       }));
     }
 

@@ -64,22 +64,22 @@ const PatientDashboardPage = () => {
   const quickLinks = useMemo(() => [
     {
       icon: Calendar, title: t("patient.myAppointments", { defaultValue: "My Appointments" }),
-      desc: t("patient.dashboard.appointmentsDesc", { defaultValue: "{{count}} upcoming", count: stats.upcoming_appointments || 0 }),
+      desc: t("patient.dashboardHome.appointmentsDesc", { defaultValue: "{{count}} upcoming", count: stats.upcoming_appointments || 0 }),
       link: "/patient/appointments", accent: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300",
     },
     {
       icon: Stethoscope, title: t("patient.myConsultations", { defaultValue: "Consultations" }),
-      desc: t("patient.dashboard.consultationsDesc", { defaultValue: "{{count}} pending", count: stats.pending_consultations || 0 }),
+      desc: t("patient.dashboardHome.consultationsDesc", { defaultValue: "{{count}} pending", count: stats.pending_consultations || 0 }),
       link: "/patient/consultations", accent: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-300",
     },
     {
       icon: Bot, title: t("patient.aiAssistant", { defaultValue: "AI Assistant" }),
-      desc: t("patient.dashboard.aiDesc", { defaultValue: "Get instant health advice" }),
+      desc: t("patient.dashboardHome.aiDesc", { defaultValue: "Get instant health advice" }),
       link: "/patient/holoramind", accent: "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-300",
     },
     {
       icon: UserCircle2, title: t("patient.profile", { defaultValue: "My Profile" }),
-      desc: t("patient.dashboard.profileDesc", { defaultValue: "{{percent}}% complete", percent: patient.profile_percent || 0 }),
+      desc: t("patient.dashboardHome.profileDesc", { defaultValue: "{{percent}}% complete", percent: patient.profile_percent || 0 }),
       link: "/patient/profile", accent: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-300",
     },
   ], [t, stats, patient]);
@@ -122,10 +122,10 @@ const PatientDashboardPage = () => {
                   </Link>
                 </div>
                 <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-                  {t("patient.dashboard.heroTitle", { defaultValue: "Welcome, {{name}}", name: patient.full_name || "" })}
+                  {t("patient.dashboardHome.heroTitle", { defaultValue: "Welcome, {{name}}", name: patient.full_name || "" })}
                 </h1>
                 <p className="mt-1 text-sm text-slate-400">
-                  {t("patient.dashboard.heroSub", { defaultValue: "Your health journey at a glance" })}
+                  {t("patient.dashboardHome.heroSub", { defaultValue: "Your health journey at a glance" })}
                 </p>
                 {patient.patient_code && (
                   <span className="mt-3 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white">
@@ -138,10 +138,10 @@ const PatientDashboardPage = () => {
                 <div className="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
                   <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
                     <Sparkles className="h-4 w-4 text-rose-400" />
-                    {t("patient.dashboard.overview", { defaultValue: "Overview" })}
+                    {t("patient.dashboardHome.overview", { defaultValue: "Overview" })}
                   </div>
                   <p className="mt-1 text-2xl font-bold text-white">{stats.total_appointments || 0}</p>
-                  <p className="text-xs text-slate-400">{t("patient.dashboard.totalAppts", { defaultValue: "total appointments" })}</p>
+                  <p className="text-xs text-slate-400">{t("patient.dashboardHome.totalAppts", { defaultValue: "total appointments" })}</p>
                 </div>
               )}
             </div>
@@ -149,10 +149,10 @@ const PatientDashboardPage = () => {
             {/* Stat pills */}
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
-                { label: t("patient.dashboard.upcoming", { defaultValue: "Upcoming" }), value: stats.upcoming_appointments || 0, color: "text-rose-400" },
-                { label: t("patient.dashboard.totalAppts", { defaultValue: "Total Appts" }), value: stats.total_appointments || 0, color: "text-blue-400" },
-                { label: t("patient.dashboard.pendingConsult", { defaultValue: "Pending Consult" }), value: stats.pending_consultations || 0, color: "text-amber-400" },
-                { label: t("patient.dashboard.completedConsult", { defaultValue: "Completed" }), value: stats.completed_consultations || 0, color: "text-emerald-400" },
+                { label: t("patient.dashboardHome.upcoming", { defaultValue: "Upcoming" }), value: stats.upcoming_appointments || 0, color: "text-rose-400" },
+                { label: t("patient.dashboardHome.totalAppts", { defaultValue: "Total Appts" }), value: stats.total_appointments || 0, color: "text-blue-400" },
+                { label: t("patient.dashboardHome.pendingConsult", { defaultValue: "Pending Consult" }), value: stats.pending_consultations || 0, color: "text-amber-400" },
+                { label: t("patient.dashboardHome.completedConsult", { defaultValue: "Completed" }), value: stats.completed_consultations || 0, color: "text-emerald-400" },
               ].map((s) => (
                 <div key={s.label} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center">
                   <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
@@ -174,7 +174,7 @@ const PatientDashboardPage = () => {
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-400">
-                {t("patient.dashboard.nextAppointment", { defaultValue: "Next Appointment" })}
+                {t("patient.dashboardHome.nextAppointment", { defaultValue: "Next Appointment" })}
               </p>
               <p className="mt-0.5 text-sm font-bold text-text-main">
                 {fmtDate(nextAppt.appointment_date)} &middot; {fmtTime(nextAppt.start_time)} – {fmtTime(nextAppt.end_time)}
@@ -219,7 +219,7 @@ const PatientDashboardPage = () => {
           <div className="flex items-center justify-between border-b border-border-main px-5 py-4">
             <h2 className="flex items-center gap-2 text-sm font-bold text-text-main">
               <Calendar className="h-4 w-4 text-rose-500" />
-              {t("patient.dashboard.recentAppointments", { defaultValue: "Recent Appointments" })}
+              {t("patient.dashboardHome.recentAppointments", { defaultValue: "Recent Appointments" })}
             </h2>
             <Link to="/patient/appointments" className="text-xs font-semibold text-rose-500 hover:underline">
               {t("common.viewAll", { defaultValue: "View all" })}
@@ -230,7 +230,7 @@ const PatientDashboardPage = () => {
               [1,2,3].map(i => <div key={i} className="animate-pulse p-4"><div className="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700" /><div className="mt-2 h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" /></div>)
             ) : recentAppointments.length === 0 ? (
               <div className="px-5 py-10 text-center text-sm text-text-dim">
-                {t("patient.dashboard.noAppointments", { defaultValue: "No appointments yet" })}
+                {t("patient.dashboardHome.noAppointments", { defaultValue: "No appointments yet" })}
               </div>
             ) : recentAppointments.map((a) => (
               <Link key={a.id} to={`/patient/appointments/${a.id}`}
@@ -259,7 +259,7 @@ const PatientDashboardPage = () => {
           <div className="flex items-center justify-between border-b border-border-main px-5 py-4">
             <h2 className="flex items-center gap-2 text-sm font-bold text-text-main">
               <Stethoscope className="h-4 w-4 text-emerald-500" />
-              {t("patient.dashboard.recentConsultations", { defaultValue: "Recent Consultations" })}
+              {t("patient.dashboardHome.recentConsultations", { defaultValue: "Recent Consultations" })}
             </h2>
             <Link to="/patient/consultations" className="text-xs font-semibold text-rose-500 hover:underline">
               {t("common.viewAll", { defaultValue: "View all" })}
@@ -270,7 +270,7 @@ const PatientDashboardPage = () => {
               [1,2,3].map(i => <div key={i} className="animate-pulse p-4"><div className="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700" /><div className="mt-2 h-3 w-1/2 rounded bg-slate-200 dark:bg-slate-700" /></div>)
             ) : recentConsultations.length === 0 ? (
               <div className="px-5 py-10 text-center text-sm text-text-dim">
-                {t("patient.dashboard.noConsultations", { defaultValue: "No consultations yet" })}
+                {t("patient.dashboardHome.noConsultations", { defaultValue: "No consultations yet" })}
               </div>
             ) : recentConsultations.map((c) => (
               <Link key={c.id} to={`/patient/consultations/${c.id}`}
@@ -281,7 +281,7 @@ const PatientDashboardPage = () => {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-text-main">{c.chief_complaint || "—"}</p>
                   <p className="text-xs text-text-dim">
-                    {c.doctor_name ? `Dr. ${c.doctor_name}` : t("patient.dashboard.unassigned", { defaultValue: "Unassigned" })}
+                    {c.doctor_name ? `Dr. ${c.doctor_name}` : t("patient.dashboardHome.unassigned", { defaultValue: "Unassigned" })}
                   </p>
                 </div>
                 <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold ${STATUS_CLS[c.status] || "bg-slate-100 text-slate-600"}`}>
@@ -356,7 +356,7 @@ const PatientDashboardPage = () => {
           {!loading && (
             <div className="mt-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-text-dim">{t("patient.dashboard.completion", { defaultValue: "Completion" })}</span>
+                <span className="text-text-dim">{t("patient.dashboardHome.completion", { defaultValue: "Completion" })}</span>
                 <span className="font-bold text-rose-500">{patient.profile_percent || 0}%</span>
               </div>
               <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">

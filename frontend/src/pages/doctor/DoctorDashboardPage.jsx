@@ -77,22 +77,22 @@ const DoctorDashboardPage = () => {
   const quickLinks = useMemo(() => [
     {
       icon: Calendar, title: t("doctor.myAppointments", { defaultValue: "My Appointments" }),
-      desc: t("doctor.dashboard.appointmentsDesc", { defaultValue: "{{count}} today", count: stats.today_appointments || 0 }),
+      desc: t("doctor.dashboardHome.appointmentsDesc", { defaultValue: "{{count}} today", count: stats.today_appointments || 0 }),
       link: "/doctor/appointments", accent: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300",
     },
     {
       icon: Stethoscope, title: t("doctor.consultationRequests", { defaultValue: "Consultations" }),
-      desc: t("doctor.dashboard.consultationsDesc", { defaultValue: "{{count}} pending", count: stats.pending_consultations || 0 }),
+      desc: t("doctor.dashboardHome.consultationsDesc", { defaultValue: "{{count}} pending", count: stats.pending_consultations || 0 }),
       link: "/doctor/consultations", accent: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-300",
     },
     {
       icon: CalendarClock, title: t("doctor.schedule", { defaultValue: "Work Schedule" }),
-      desc: t("doctor.dashboard.scheduleDesc", { defaultValue: "Manage your availability" }),
+      desc: t("doctor.dashboardHome.scheduleDesc", { defaultValue: "Manage your availability" }),
       link: "/doctor/schedule", accent: "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-300",
     },
     {
       icon: Users, title: t("doctor.myPatients", { defaultValue: "My Patients" }),
-      desc: t("doctor.dashboard.patientsDesc", { defaultValue: "{{count}} total", count: stats.total_patients || 0 }),
+      desc: t("doctor.dashboardHome.patientsDesc", { defaultValue: "{{count}} total", count: stats.total_patients || 0 }),
       link: "/doctor/patients", accent: "bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-300",
     },
     {
@@ -121,10 +121,10 @@ const DoctorDashboardPage = () => {
                 </Link>
               </div>
               <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-                {loading ? t("common.loading", { defaultValue: "Loading..." }) : t("doctor.dashboard.heroTitle", { defaultValue: "Welcome, Dr. {{name}}", name: doctor.full_name || "" })}
+                {loading ? t("common.loading", { defaultValue: "Loading..." }) : t("doctor.dashboardHome.heroTitle", { defaultValue: "Welcome, Dr. {{name}}", name: doctor.full_name || "" })}
               </h1>
               <p className="mt-1 text-sm text-slate-400">
-                {t("doctor.dashboard.heroSub", { defaultValue: "Your workspace at a glance" })}
+                {t("doctor.dashboardHome.heroSub", { defaultValue: "Your workspace at a glance" })}
               </p>
               {!loading && (doctor.specialty_name || doctor.branch_names?.length > 0) && (
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -145,16 +145,16 @@ const DoctorDashboardPage = () => {
               <div className="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
                   <Sparkles className="h-4 w-4 text-cyan-400" />
-                  {t("doctor.dashboard.todayGlance", { defaultValue: "Today at a Glance" })}
+                  {t("doctor.dashboardHome.todayGlance", { defaultValue: "Today at a Glance" })}
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-2xl font-bold text-white">{stats.today_appointments || 0}</p>
-                    <p className="text-xs text-slate-400">{t("doctor.dashboard.appointmentsShort", { defaultValue: "Appointments" })}</p>
+                    <p className="text-xs text-slate-400">{t("doctor.dashboardHome.appointmentsShort", { defaultValue: "Appointments" })}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-white">{stats.pending_consultations || 0}</p>
-                    <p className="text-xs text-slate-400">{t("doctor.dashboard.pendingShort", { defaultValue: "Pending" })}</p>
+                    <p className="text-xs text-slate-400">{t("doctor.dashboardHome.pendingShort", { defaultValue: "Pending" })}</p>
                   </div>
                 </div>
               </div>
@@ -164,12 +164,12 @@ const DoctorDashboardPage = () => {
           {/* Stats bar + Earnings */}
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-6">
             {(loading ? Array.from({ length: 6 }) : [
-              { label: t("doctor.dashboard.todayAppts", { defaultValue: "Today" }), value: stats.today_appointments, icon: Clock, accent: "text-cyan-400" },
-              { label: t("doctor.dashboard.totalAppts", { defaultValue: "Appointments" }), value: stats.total_appointments, icon: Calendar, accent: "text-blue-400" },
-              { label: t("doctor.dashboard.pendingConsult", { defaultValue: "Pending" }), value: stats.pending_consultations, icon: MessageSquare, accent: "text-amber-400" },
-              { label: t("doctor.dashboard.totalConsult", { defaultValue: "Consultations" }), value: stats.total_consultations, icon: Stethoscope, accent: "text-emerald-400" },
-              { label: t("doctor.dashboard.patients", { defaultValue: "Patients" }), value: stats.total_patients, icon: Users, accent: "text-rose-400" },
-              { label: t("doctor.dashboard.earnings", { defaultValue: "Earnings" }), value: earnings?.totalEarnings, icon: CheckCircle2, accent: "text-cyan-500" },
+              { label: t("doctor.dashboardHome.todayAppts", { defaultValue: "Today" }), value: stats.today_appointments, icon: Clock, accent: "text-cyan-400" },
+              { label: t("doctor.dashboardHome.totalAppts", { defaultValue: "Appointments" }), value: stats.total_appointments, icon: Calendar, accent: "text-blue-400" },
+              { label: t("doctor.dashboardHome.pendingConsult", { defaultValue: "Pending" }), value: stats.pending_consultations, icon: MessageSquare, accent: "text-amber-400" },
+              { label: t("doctor.dashboardHome.totalConsult", { defaultValue: "Consultations" }), value: stats.total_consultations, icon: Stethoscope, accent: "text-emerald-400" },
+              { label: t("doctor.dashboardHome.patients", { defaultValue: "Patients" }), value: stats.total_patients, icon: Users, accent: "text-rose-400" },
+              { label: t("doctor.dashboardHome.earnings", { defaultValue: "Earnings" }), value: earnings?.totalEarnings, icon: CheckCircle2, accent: "text-cyan-500" },
             ]).map((s, i) => loading ? (
               <div key={i} className="animate-pulse rounded-xl bg-white/5 px-4 py-3">
                 <div className="h-3 w-16 rounded bg-slate-700" />
@@ -181,7 +181,7 @@ const DoctorDashboardPage = () => {
                   <s.icon className={`h-4 w-4 ${s.accent}`} />
                   <span className="text-xs text-slate-400">{s.label}</span>
                 </div>
-                <p className="mt-1 text-lg font-bold text-white">{s.label === t("doctor.dashboard.earnings", { defaultValue: "Earnings" }) ? (earnings ? earnings.totalEarnings?.toLocaleString("vi-VN") + " ₫" : 0) : (s.value ?? 0)}</p>
+                <p className="mt-1 text-lg font-bold text-white">{s.label === t("doctor.dashboardHome.earnings", { defaultValue: "Earnings" }) ? (earnings ? earnings.totalEarnings?.toLocaleString("vi-VN") + " ₫" : 0) : (s.value ?? 0)}</p>
               </div>
             ))}
           </div>
@@ -222,7 +222,7 @@ const DoctorDashboardPage = () => {
             <div className="flex items-center gap-2">
               <Calendar className="h-5 w-5 text-blue-500" />
               <h3 className="text-base font-semibold text-text-main">
-                {t("doctor.dashboard.recentAppointments", { defaultValue: "Recent Appointments" })}
+                {t("doctor.dashboardHome.recentAppointments", { defaultValue: "Recent Appointments" })}
               </h3>
             </div>
             <Link to="/doctor/appointments" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">
@@ -236,7 +236,7 @@ const DoctorDashboardPage = () => {
           ) : recentAppointments.length === 0 ? (
             <div className="flex flex-col items-center py-10 text-sm text-text-dim">
               <Calendar className="h-10 w-10 text-slate-300 dark:text-slate-600 mb-2" />
-              {t("doctor.dashboard.noAppointments", { defaultValue: "No appointments yet" })}
+              {t("doctor.dashboardHome.noAppointments", { defaultValue: "No appointments yet" })}
             </div>
           ) : (
             <div className="divide-y divide-border-main">
@@ -268,7 +268,7 @@ const DoctorDashboardPage = () => {
             <div className="flex items-center gap-2">
               <CalendarClock className="h-5 w-5 text-amber-500" />
               <h3 className="text-base font-semibold text-text-main">
-                {t("doctor.dashboard.upcomingSchedule", { defaultValue: "Upcoming Schedule" })}
+                {t("doctor.dashboardHome.upcomingSchedule", { defaultValue: "Upcoming Schedule" })}
               </h3>
             </div>
             <Link to="/doctor/schedule" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">
@@ -282,7 +282,7 @@ const DoctorDashboardPage = () => {
           ) : upcomingSchedules.length === 0 ? (
             <div className="flex flex-col items-center py-10 text-sm text-text-dim">
               <CalendarClock className="h-10 w-10 text-slate-300 dark:text-slate-600 mb-2" />
-              {t("doctor.dashboard.noSchedule", { defaultValue: "No upcoming schedule" })}
+              {t("doctor.dashboardHome.noSchedule", { defaultValue: "No upcoming schedule" })}
             </div>
           ) : (
             <div className="divide-y divide-border-main">

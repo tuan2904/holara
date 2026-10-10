@@ -1,35 +1,45 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Breadcrumb = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   // Map of route segments to display names
   const routeNames = {
-    patient: "Patient Zone",
-    doctor: "Doctor Zone",
-    admin: "Admin Panel",
-    "clinic-owner": "Clinic Owner",
-    branches: "Branches",
-    doctors: "Doctors",
-    appointments: "Appointments",
-    consultations: "Consultations",
-    profile: "Profile",
-    holoramind: "AI Assistant",
-    schedule: "Schedule",
-    "my-branches": "My Branches",
-    "my-doctors": "My Doctors",
-    subscription: "Subscription",
-    users: "Users",
-    roles: "Roles",
-    permissions: "Permissions",
-    specialties: "Specialties",
-    patients: "Patients",
-    schedules: "Schedules",
-    receptionist: "Receptionist",
-    accountant: "Accountant",
+    patient: t("breadcrumb.patient"),
+    doctor: t("breadcrumb.doctor"),
+    admin: t("breadcrumb.admin"),
+    "clinic-owner": t("breadcrumb.clinicOwner"),
+    branches: t("breadcrumb.branches"),
+    doctors: t("breadcrumb.doctors"),
+    appointments: t("breadcrumb.appointments"),
+    consultations: t("breadcrumb.consultations"),
+    profile: t("breadcrumb.profile"),
+    holoramind: t("breadcrumb.holoramind"),
+    schedule: t("breadcrumb.schedule"),
+    "my-branches": t("breadcrumb.myBranches"),
+    "my-doctors": t("breadcrumb.myDoctors"),
+    subscription: t("breadcrumb.subscription"),
+    users: t("breadcrumb.users"),
+    roles: t("breadcrumb.roles"),
+    permissions: t("breadcrumb.permissions"),
+    specialties: t("breadcrumb.specialties"),
+    patients: t("breadcrumb.patients"),
+    schedules: t("breadcrumb.schedules"),
+    receptionist: t("breadcrumb.receptionist"),
+    accountant: t("breadcrumb.accountant"),
+    new: t("breadcrumb.new"),
+    edit: t("breadcrumb.edit"),
+    view: t("breadcrumb.view"),
+    reviews: t("breadcrumb.reviews"),
+    earnings: t("breadcrumb.earnings"),
+    room: t("breadcrumb.room"),
+    version: t("breadcrumb.version"),
+    "audit-logs": t("breadcrumb.auditLogs"),
   };
 
   // Don't show breadcrumb on home pages
@@ -41,7 +51,7 @@ const Breadcrumb = () => {
     <nav className="flex items-center gap-1 px-6 py-3 bg-bg-surface dark:bg-slate-800 border-b border-border-main text-sm">
       <Link to="/" className="flex items-center gap-1 text-text-dim hover:text-[#E06666] transition">
         <Home className="w-4 h-4" />
-        <span className="hidden sm:inline">Home</span>
+        <span className="hidden sm:inline">{t("breadcrumb.home")}</span>
       </Link>
 
       {pathnames.map((segment, index) => {
