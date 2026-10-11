@@ -160,12 +160,24 @@ const DoctorFormPage = ({ returnPath = "/admin/doctors", fetchBranchesUrl = null
 
   const primarySelectedBranch = selectedBranches[0] || null;
 
-  const selectedBranchSubscription = primarySelectedBranch
+  // Branch-level plans take priority; otherwise the owner's account-level plan
+  // (MeDecode Free/Plus) covers every branch, matching the backend entitlement check.
+  const isUsableSubscription = (subscription) => ["trialing", "active"].includes(subscription.status);
+  const branchScopedSubscription = primarySelectedBranch
     ? subscriptions.find(
         (subscription) =>
           subscription.scope_type === "branch" &&
           Number(subscription.scope_id) === Number(primarySelectedBranch.id)
       ) || null
+    : null;
+  const accountScopedSubscription =
+    subscriptions.find((subscription) => subscription.scope_type === "account" && isUsableSubscription(subscription)) ||
+    subscriptions.find((subscription) => subscription.scope_type === "account") ||
+    null;
+  const selectedBranchSubscription = primarySelectedBranch
+    ? (branchScopedSubscription && isUsableSubscription(branchScopedSubscription)
+        ? branchScopedSubscription
+        : accountScopedSubscription || branchScopedSubscription)
     : null;
 
   const selectedBranchPlan = selectedBranchSubscription
